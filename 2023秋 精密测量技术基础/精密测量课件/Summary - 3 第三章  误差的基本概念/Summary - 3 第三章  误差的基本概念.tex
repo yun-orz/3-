@@ -1,0 +1,845 @@
+\documentclass[11pt,a4paper]{ctexart}
+
+% --- 常用宏包配置 ---
+\usepackage[top=2.2cm, bottom=2.2cm, left=2.2cm, right=2.2cm]{geometry}
+\usepackage{amsmath, amssymb, amsfonts, bm, mathtools}
+\usepackage{booktabs, array, tabularx, makecell, multirow}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc, patterns, decorations.pathreplacing}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[colorlinks=true, linkcolor=blue!70!black, citecolor=green!60!black, urlcolor=teal]{hyperref}
+
+% --- 页面页眉页脚 ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\kaishu 精密测量技术基础 · 核心考点精编讲义}
+\fancyhead[R]{\small\kaishu 第三章 误差的基本概念与不确定度}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% --- tcolorbox 样式设计 ---
+\definecolor{primaryblue}{RGB}{24, 75, 159}
+\definecolor{accentred}{RGB}{180, 40, 40}
+\definecolor{boxbgblue}{RGB}{240, 245, 255}
+\definecolor{boxbgred}{RGB}{255, 245, 245}
+\definecolor{boxbggreen}{RGB}{245, 255, 245}
+\definecolor{boxbgyellow}{RGB}{255, 252, 235}
+
+\newtcolorbox{defbox}[1]{
+  colback=boxbgblue,
+  colframe=primaryblue,
+  fonttitle=\bfseries\sffamily,
+  title={#1},
+  arc=3mm,
+  boxrule=0.8pt,
+  breakable
+}
+
+\newtcolorbox{exambox}[1]{
+  colback=boxbgred,
+  colframe=accentred,
+  fonttitle=\bfseries\sffamily,
+  title={#1},
+  arc=3mm,
+  boxrule=0.8pt,
+  breakable
+}
+
+\newtcolorbox{tipbox}[1]{
+  colback=boxbggreen,
+  colframe=green!50!black,
+  fonttitle=\bfseries\sffamily,
+  title={#1},
+  arc=3mm,
+  boxrule=0.8pt,
+  breakable
+}
+
+\newtcolorbox{solbox}[1]{
+  colback=boxbgyellow,
+  colframe=orange!80!black,
+  fonttitle=\bfseries\sffamily,
+  title={#1},
+  arc=3mm,
+  boxrule=0.8pt,
+  breakable
+}
+
+% --- 章节标题微调 ---
+\titleformat{\section}{\large\bfseries\color{primaryblue}}{\thesection}{1em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries\color{primaryblue!80!black}}{\thesubsection}{0.8em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{0.6em}{}
+
+\setlist{itemsep=0.2em, topsep=0.3em, parsep=0em}
+
+\begin{document}
+
+% --- 封面标题区 ---
+\begin{center}
+    {\LARGE\bfseries\sffamily\color{primaryblue} 精密测量技术基础 · 核心考点与讲义精编}\\[0.6em]
+    {\Large\bfseries 第三章\quad 误差的基本概念与测量不确定度}\\[0.8em]
+    {\small\kaishu 整理自中国科学技术大学《精密测量技术基础》课程讲义（71页课件）、教材及历年期末考题}\\[0.4em]
+    {\footnotesize 编制标准：中文主导 · 双语术语对照 · 包含精确课件页码索引 · 典型作业与期末考题解析 · TikZ矢量图解}
+\end{center}
+
+\vspace{-0.5em}
+\hrule height 1.2pt
+\vspace{0.8em}
+
+% --- 目录 ---
+\tableofcontents
+\vspace{1em}
+\hrule
+\vspace{1.5em}
+
+% =========================================================================
+% 第一部分：§3-1 测量的定义与分类
+% =========================================================================
+\section{§3-1 测量的定义与分类}
+
+\subsection{测量的定义与现代赋值观 \textnormal{[课件 P2]}}
+
+\begin{defbox}{核心概念：测量 (Measurement)}
+\begin{itemize}
+    \item \textbf{经典比较定义}：测量是将被测量与一个作为测量单位的标准量进行比较，以确定其比值的过程。基本量方程表示为：
+    \begin{equation}
+        x = q \cdot [u]
+    \end{equation}
+    其中 $x$ 为被测量，$q$ 为纯数值（测量值），$[u]$ 为测量单位。
+    \item \textbf{现代计量学定义 (VIM 第 3 版)}：\textbf{测量 (Measurement)} 是指赋值给具体事物以表示它们之间关于特定特性的关系的过程。赋值过程即为测量过程，所赋予的数值定义为\textbf{测量值 (Measured value)}。
+    \item \textbf{测量的四要素}：被测对象 (Measurand)、计量单位与标准 (Standard)、测量方法与仪器 (Method \& Apparatus)、测量人员与环境 (Observer \& Environment)。
+\end{itemize}
+\end{defbox}
+
+\subsection{测量的分类：等精度测量 vs 非等精度测量 \textnormal{[课件 P4]}}
+
+在测量实践中，根据测量条件是否保持恒定，将测量分为两大基础类别：
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{p{3.2cm}Xp{4.5cm}}
+\toprule
+\textbf{分类名称} & \textbf{定义与充要条件 [课件 P4]} & \textbf{数据处理与数学特征} \\
+\midrule
+\textbf{等精度测量}\newline\textit{(Measurement of equal precision)} & 在\textbf{相同的测量精度条件}（同一水平观测者、同一精度仪器、相同环境条件、相同实验方法）下对同一被测量进行的多次重复测量。 & 各测量值地位等同，权重相同（$p_i = 1$），测量列的\textbf{算术平均值}即为最佳估计值。 \\
+\midrule
+\textbf{非等精度测量}\newline\textit{(Measurement of unequal precision)} & 在\textbf{不同的测量精度条件}（不同技术水平人员、不同精度仪器、不同环境或不同测量方法）下对同一被测量进行的测量。 & 各测量值精度不同，数据处理时必须引入\textbf{权 (Weight, $p_i$)}，以\textbf{加权算术平均值}作为最佳估计值。 \\
+\bottomrule
+\end{tabularx}
+\caption{等精度测量与非等精度测量辨析表}
+\end{table}
+
+\begin{tipbox}{考点避坑：等精度测量 $\neq$ 测量读数相同}
+等精度测量强调的是\textbf{测量条件（人、机、料、法、环）的恒定性}，由于随机误差的不可避免性，重复测量读数必然存在客观离散，绝非读数必须完全相同。
+\end{tipbox}
+
+% =========================================================================
+% 第二部分：§3-2 误差及相关概念
+% =========================================================================
+\section{§3-2 误差定义与基本表示方法}
+
+\subsection{误差公理与绝对误差 \textnormal{[课件 P5, P7--P10]}}
+
+\begin{defbox}{误差公理与绝对误差 (Absolute Error)}
+\begin{itemize}
+    \item \textbf{误差公理}：任何测量都不可避免地带有测量误差，\textbf{误差具有客观必然性与普遍存在性}。测量结果只能是被测量的近似值，研究误差的根本目的在于掌握其规律、评定测量结果的可靠程度并加以控制与减小。
+    \item \textbf{绝对误差 (Absolute error, $\delta$)}：测得量值与被测量真值之差：
+    \begin{equation}
+        \delta = x - \mu
+    \end{equation}
+    其中 $x$ 为测得值，$\mu$ 为真值。
+    \item \textbf{示值误差 (Error of indication, $\Delta$)}：对于计量器具，示值误差定义为：
+    \begin{equation}
+        \Delta = x_{\text{示}} - x_{\text{真}}
+    \end{equation}
+\end{itemize}
+\end{defbox}
+
+\subsubsection{真值 (True Value) 的哲学分类与层级 \textnormal{[课件 P7--P8]}}
+\begin{enumerate}
+    \item \textbf{客观真值}：某物理量在客观状态下本身所具有的真实大小。由于误差的客观存在，客观真值严格不可知。
+    \item \textbf{理论真值 (Theoretical true value)}：由理论公式或几何定理确定的确定值。例如：平面三角形三个内角之和恒为 $180^\circ$；理想纯电容电路中电流超前电压的相位差为 $90^\circ$。
+    \item \textbf{约定真值 (Conventional true value)}：由国际协议或国家法定设立的基准实物所体现的值。例如：国家基准米原器、高等级标准量块、高稳定度频率基准等。在实际测量中，约定真值通常代替客观真值作为参考基准。
+\end{enumerate}
+
+\subsubsection{绝对误差的四大本质属性 \textnormal{[课件 P9--P10 核心要点]}}
+\begin{enumerate}
+    \item \textbf{确定性与单符号性}：绝对误差是一个确定的具体数值，\textbf{恒具有确定的正负号（$+$ 或 $-$），绝不可写成带有“$\pm$”号的形式}！带有“$\pm$”的是误差极限或不确定度，非单次绝对误差。
+    \item \textbf{代数可加性}：若总误差由若干个误差分量构成，则总绝对误差等于各分量绝对误差的代数和。
+    \item \textbf{量纲一致性}：绝对误差具有与被测量完全相同的量纲与计量单位（如 $\text{mm}$、$\text{mV}$ 等）。
+    \item \textbf{数值修正确据}：对测量结果实施数值修正时，完全依据绝对误差的大小和符号进行补偿。
+\end{enumerate}
+
+\subsection{相对误差 (Relative Error) \textnormal{[课件 P11--P13]}}
+
+\begin{defbox}{相对误差定义与物理内涵}
+\textbf{相对误差 (Relative error, $\delta_r$)} 是绝对误差除以被测量的参考量值（通常取真值 $\mu$ 或测得值 $x$）：
+\begin{equation}
+    \delta_r = \frac{\delta}{\mu} \times 100\% = \frac{x - \mu}{\mu} \times 100\% \approx \frac{\delta}{x} \times 100\%
+\end{equation}
+\textbf{物理意义}：绝对误差只能说明测量值偏离真值的绝对数值，无法确切反映测量工作的\textbf{精细程度 (Measurement quality)}。引入相对误差消除了量纲与量值大小的影响。
+\end{defbox}
+
+\begin{tipbox}{典型对比实例：频率计测量对比 [课件 P12--P13]}
+\begin{itemize}
+    \item 频率计 A 测量 $100\text{ kHz}$ 标准频率，示值为 $101\text{ kHz}$：
+    $$\delta_1 = 101 - 100 = 1\text{ kHz}, \quad \delta_{r1} = \frac{1\text{ kHz}}{100\text{ kHz}} \times 100\% = 1\%$$
+    \item 频率计 B 测量 $1\text{ MHz}$ 标准频率，示值为 $1.001\text{ MHz}$：
+    $$\delta_2 = 1.001 - 1.000 = 0.001\text{ MHz} = 1\text{ kHz}, \quad \delta_{r2} = \frac{1\text{ kHz}}{1000\text{ kHz}} \times 100\% = 0.1\%$$
+    \item \textbf{结论}：两台仪表的绝对误差完全相同（均为 $1\text{ kHz}$），但频率计 B 在测量 $1\text{ MHz}$ 时的相对误差仅为 A 的十分之一，表明测量工作的精细程度远高于 A。
+\end{itemize}
+\end{tipbox}
+
+\subsection{引用误差与仪表准确度等级 \textnormal{[课件 P14]}}
+
+\begin{defbox}{引用误差 (Fiducial Error) 与准确度等级}
+\textbf{引用误差 (Fiducial error, $\gamma$)} 是仪表的示值误差与测量范围上限（满量程值 $Y_{\max}$）之比：
+\begin{equation}
+    \gamma = \frac{\Delta}{Y_{\max}} \times 100\% = \frac{x_{\text{标称}} - x_{\text{实际}}}{Y_{\max}} \times 100\%
+\end{equation}
+\textbf{仪表准确度等级 (Accuracy class)}：
+\begin{itemize}
+    \item 国家标准规定：工业电工仪表准确度等级共分为七级：\textbf{0.1级、0.2级、0.5级、1.0级、1.5级、2.5级、5.0级}。
+    \item \textbf{定义法则}：将仪表在规定工作条件下允许的最大引用误差的百分数去掉“$\%$”符号后的数值，即为该仪表的准确度等级 $K$。
+    \item 仪表全量程内任意刻度点的最大允许绝对示值误差限为常数：
+    \begin{equation}
+        \Delta_{\max} = \pm K\% \cdot Y_{\max}
+    \end{equation}
+\end{itemize}
+\end{defbox}
+
+\begin{exambox}{核心高频考点：为什么使用电表等测量时，总希望指针在全量程的 $2/3$ 以上？[作业 3-3]}
+\textbf{数学机理推导}：
+设仪表准确度等级为 $K$，满量程值为 $Y_{\max}$。由引用误差定义可知，仪表在整个标度尺范围内的最大允许示值绝对误差为固定值：
+\begin{equation}
+    |\Delta| \le K\% \cdot Y_{\max}
+\end{equation}
+当使用该仪表测量某一实际量值 $x$ 时，该测量点所对应的\textbf{最大相对误差限}为：
+\begin{equation}
+    \delta_{r,\max}(x) = \pm \frac{|\Delta|}{x} = \pm K\% \cdot \frac{Y_{\max}}{x}
+\end{equation}
+\textbf{深入规律剖析}：
+\begin{enumerate}
+    \item 当测量值 $x \to 0$ 时，相对误差限 $\delta_{r,\max} \to \infty$，呈双曲线急剧上升发散！
+    \item 当测得值 $x = Y_{\max}$（满偏）时，相对误差限最小，恰为仪表等级 $\pm K\%$；
+    \item 当 $x = \frac{2}{3} Y_{\max}$ 时，相对误差限为 $\frac{3}{2} K\% = 1.5 K\%$；
+    \item 若读数降至 $x = \frac{1}{10} Y_{\max}$ 时，相对误差限恶化为 $10 K\%$（扩大 10 倍！）。
+\end{enumerate}
+\textbf{结论}：为了抑制相对误差、确保测量精度，必须合理选择仪表量程，使读数指针尽量偏转在\textbf{全量程的 $2/3$ 以上}区域。
+\end{exambox}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.1]
+    \begin{axis}[
+        axis lines = left,
+        xlabel = {测得值与满量程之比 $x / Y_{\max}$},
+        ylabel = {相对误差限与仪表级别之比 $\frac{\delta_{r,\max}}{K\%}$},
+        xmin = 0, xmax = 1.15,
+        ymin = 0, ymax = 10,
+        xtick = {0.2, 0.4, 0.667, 0.8, 1.0},
+        xticklabels = {0.2, 0.4, $2/3$, 0.8, 1.0},
+        ytick = {1, 1.5, 2.5, 5, 10},
+        grid = major,
+        grid style = {dashed, gray!30},
+        width = 11cm,
+        height = 6.2cm,
+        legend pos = north east
+    ]
+        % 双曲线曲线 y = 1/x
+        \addplot[domain=0.1:1.05, samples=200, color=primaryblue, line width=1.5pt]{1/x};
+        \addlegendentry{$\delta_{r,\max} / K\% = \frac{1}{x/Y_{\max}}$}
+
+        % 标出 2/3 临界点
+        \addplot[dashed, color=accentred, line width=1pt] coordinates {(0.667,0) (0.667,1.5)};
+        \addplot[dashed, color=accentred, line width=1pt] coordinates {(0,1.5) (0.667,1.5)};
+        \node[circle, fill=accentred, inner sep=2pt] at (axis cs:0.667,1.5) {};
+        \node[left=5pt, color=accentred, font=\footnotesize] at (axis cs:0.667,1.85) {$(2/3, 1.5)$ 推荐拐点};
+
+        % 标出 1.0 终点
+        \node[circle, fill=primaryblue, inner sep=2pt] at (axis cs:1.0,1.0) {};
+        \node[above=2pt, color=primaryblue, font=\footnotesize] at (axis cs:1.0,1.0) {$(1.0, 1.0)$};
+
+        % 推荐测量工作区阴影
+        \fill[green!20, opacity=0.4] (axis cs:0.667,0) rectangle (axis cs:1.0,10);
+        \node[color=green!50!black, font=\bfseries, align=center] at (axis cs:0.83, 7) {推荐测量区间\\[-0.2em]($x \ge \frac{2}{3} Y_{\max}$)};
+    \end{axis}
+\end{tikzpicture}
+\caption{电表测量相对误差限随读数位置变化的双曲线特性图}
+\label{fig:fiducial_error}
+\end{figure}
+
+\subsection{真误差、残余误差、最大误差与极限误差辨析 \textnormal{[课件 P15--P17]}}
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{p{3.2cm}p{4.5cm}X}
+\toprule
+\textbf{误差表达概念} & \textbf{数学定义式 [课件 P15--P17]} & \textbf{关键性质与工程应用} \\
+\midrule
+\textbf{真误差 (True error, $\delta$)} & $\delta = x - A_0$ & 以客观真值 $A_0$ 为基准，理论概念，在实际测量中不可求。 \\
+\midrule
+\textbf{残余误差 / 残差\newline\textit{(Residual error, $v_i$)}} & $v_i = x_i - \bar{x}$ & 以 $n$ 次测量的\textbf{算术平均值} $\bar{x}$ 为基准。具有重要性质：$\sum_{i=1}^n v_i = 0$。残差可由实测数据算出，是计算\textbf{实验标准差}的基石。 \\
+\midrule
+\textbf{最大绝对误差\newline\textit{(Maximum error, $U$)}} & $U = \sup |x - A_0|$ & 测得值真误差绝对值的确定性上确界，即真误差绝不会超过的极限值。 \\
+\midrule
+\textbf{极限误差\newline\textit{(Limiting error, $\delta_{\lim}$)}} & $\delta_{\lim} = \pm 3\sigma$ & 针对服从正态分布的随机误差，取三倍标准差作为极限误差。置信概率为 $99.73\%$，超出概率仅 $0.27\%$。 \\
+\bottomrule
+\end{tabularx}
+\caption{与绝对误差相关的四类重要概念对比}
+\end{table}
+
+\begin{tipbox}{易混辨析：最大绝对误差 $U$ vs 极限误差 $\delta_{\lim}$}
+\begin{itemize}
+    \item \textbf{最大绝对误差 $U$}：属于\textbf{确定性边界}概念（如由机械硬限位或几何尺寸决定的绝对界限，具有绝对性）。
+    \item \textbf{极限误差 $\delta_{\lim} = 3\sigma$}：属于\textbf{概率统计界限}，在理论上并非绝对不可越过，而是指超越该界限的事件属于极小概率事件（小概率事件原理）。
+\end{itemize}
+\end{tipbox}
+
+% =========================================================================
+% 第三部分：误差分类体系与现代统计学定义
+% =========================================================================
+\section{误差分类体系与现代统计学表征}
+
+\subsection{传统三类误差的基本特征 \textnormal{[课件 P18--P28]}}
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{p{2.5cm}Xp{4.2cm}p{3.2cm}}
+\toprule
+\textbf{误差类别} & \textbf{定义与核心特征 [课件 P19, 25, 27]} & \textbf{数学性质与规律} & \textbf{消除与处理原则} \\
+\midrule
+\textbf{系统误差}\newline\textit{(Systematic error)} & 在顺次测量的系列结果中，其值保持恒定或按某一确定规律变化的误差分量。 & 具有\textbf{可预见性}与前提条件依赖性。数学期望不为零。 & \textbf{可修正消除}：引入修正值 $b = -\varepsilon$ 或采用特殊测量法抵消。 \\
+\midrule
+\textbf{随机误差}\newline\textit{(Random error)} & 在相同条件下多次重复测量时，误差大小和正负符号不可预见地随机变化的误差分量。 & 单次无规律，总体服从概率统计分布。具有重要的\textbf{抵偿性}。 & \textbf{不可修正，只能统计估计}：多次测量求平均值削弱其影响。 \\
+\midrule
+\textbf{粗大误差}\newline\textit{(Gross error / Outlier)} & 明显超出正常分布规律范围的异常过失误差。歪曲了测量客观事实。 & 属于孤立异常点，由失误或突变外界干扰引起。 & \textbf{必须剔除}：通过莱以特准则、$3\sigma$ 原则检出并剔除不用。 \\
+\bottomrule
+\end{tabularx}
+\caption{系统误差、随机误差与粗大误差综合对照表}
+\end{table}
+
+\subsection{系统误差的进一步划分与修正值 \textnormal{[课件 P22--P24]}}
+
+\begin{defbox}{系统误差的“修正值”法则}
+\begin{itemize}
+    \item \textbf{修正值 (Correction value, $b$)}：以代数法相加于未修正测得量值，用以补偿系统误差的值。
+    \begin{equation}
+        b = -\varepsilon \quad (\text{修正值等于负的系统误差})
+    \end{equation}
+    \item \textbf{修正后的测量结果}：
+    \begin{equation}
+        x_{\text{修}} = x + b = x - \varepsilon
+    \end{equation}
+\end{itemize}
+\end{defbox}
+
+\subsubsection{系统误差的多维分类 [课件 P23--P24]}
+\begin{itemize}
+    \item \textbf{按掌握程度分类}：
+    \begin{enumerate}
+        \item \textbf{已定系统误差}：绝对值和符号均已明确（如检定证书给出的量块偏差修正值）。直接代数相加修正消除。
+        \item \textbf{未定系统误差}：绝对值和符号未能精确确定，但能估计其极限变化范围（如仪器制造允差）。不能直接修正，需纳入不确定度评估。
+    \end{enumerate}
+    \item \textbf{按随时间变化规律分类}：
+    \begin{enumerate}
+        \item \textbf{恒定系统误差}：在整个测量过程中绝对值和符号保持恒定不变（如零位偏移）。
+        \item \textbf{变值系统误差}：随时间或输入变化。细分为：\textbf{线性系统误差}（如均匀升温热膨胀）、\textbf{周期性系统误差}（如刻度盘偏心安装引起的正弦误差）、\textbf{复杂规律系统误差}。
+    \end{enumerate}
+\end{itemize}
+
+\subsection{误差的现代统计学定义与期望正交分解 \textnormal{[课件 P29--P36]}}
+
+将测得量值视为连续型随机变量 $x$，设其数学期望为 $E(x)$，参考真值为 $\mu$。
+根据误差原始定义：
+\begin{equation}
+    \delta = x - \mu = [x - E(x)] + [E(x) - \mu] = \eta + \varepsilon
+\end{equation}
+该公式揭示了测量误差在统计结构上的正交/线性分解特性：
+
+\begin{defbox}{统计学定义的两大误差分量}
+\begin{enumerate}
+    \item \textbf{随机误差分量 ($\eta = x - E(x)$)}：
+    \begin{itemize}
+        \item \textbf{数学本质}：测得量值与其数学期望的偏离值。
+        \item \textbf{统计期望严格为零}：
+        \begin{equation}
+            E(\eta) = E[x - E(x)] = E(x) - E(x) = 0
+        \end{equation}
+        这从数学层面严格证明了随机误差的\textbf{统计抵偿性}！
+        \item 其离散程度由方差 $\sigma^2 = E[(x - E(x))^2]$ 描述。
+    \end{itemize}
+    \item \textbf{系统误差分量 ($\varepsilon = E(x) - \mu$)}：
+    \begin{itemize}
+        \item \textbf{数学本质}：数学期望与其客观真值的恒定偏离。
+        \item \textbf{统计期望恒等于系统误差}：
+        \begin{equation}
+            E(\delta) = E(x - \mu) = E(x) - \mu = \varepsilon
+        \end{equation}
+    \end{itemize}
+\end{enumerate}
+\end{defbox}
+
+\subsection{误差分类的辩证关系与相互转化 \textnormal{[课件 P38]}}
+
+\begin{exambox}{经典高频论述题：系统误差与随机误差能否相互转化？其辩证关系为何？}
+\textbf{标准答案要点}：
+\begin{enumerate}
+    \item \textbf{定义界限的科学严谨性}：从统计学严格数学定义来看，系统误差和随机误差的定义科学严谨、分工明确，两者数学期望与性质完全不同，不容混淆。
+    \item \textbf{工程实践划分的人为性与条件性}：在具体测量实践中，一个具体的误差分量究竟属于系统误差还是随机误差，\textbf{完全取决于考察的具体范围、时间和前提条件}。条件发生改变，两类误差在一定条件下可以\textbf{相互转化}。
+    \item \textbf{典型转化场景实例}：
+    \begin{itemize}
+        \item \textbf{系统误差转化为随机误差}：某机床车削加工一批销轴，由于刀具均匀磨损，在单个零件加工的时间序列上表现为随时间线性漂移的\textbf{线性系统误差}；但当将整批加工好的销轴混合在一起，用于整机装配或随机抽检时，每根轴的尺寸偏差便转化为服从一定概率分布的\textbf{随机误差}。
+        \item \textbf{随机误差转化为系统误差}：上一级计量院用高精度干涉仪校准某标准量块，在校准过程中由于环境微气流扰动产生\textbf{随机误差}；该量块被标定后附带证书交付下级车间作为基准使用，此前校准残留的那一次微小随机误差，在下级车间的全部测量中便固定沉淀为该量块的\textbf{恒定系统误差}！
+    \end{itemize}
+\end{enumerate}
+\end{exambox}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.05]
+    \begin{axis}[
+        axis lines = middle,
+        xlabel = {测得值 $x$},
+        ylabel = {概率密度 $f(x)$},
+        xlabel style = {at={(ticklabel* cs:1)}, anchor=north west},
+        ylabel style = {at={(ticklabel* cs:1)}, anchor=south west},
+        xmin = -4.5, xmax = 8.5,
+        ymin = 0, ymax = 0.52,
+        ticks = none,
+        width = 13.5cm,
+        height = 6.8cm
+    ]
+        % 正态分布曲线：均值 mu_x = 2.0 (系统误差偏移), sigma = 1.0
+        \addplot[domain=-1.5:5.5, samples=200, color=primaryblue, line width=1.5pt]
+            {1/(sqrt(2*pi))*exp(-((x-2.0)^2)/2)};
+
+        % 真值位置 mu = 0
+        \draw[dashed, line width=1pt, color=green!60!black] (axis cs:0, 0) -- (axis cs:0, 0.45);
+        \node[below, color=green!60!black, font=\bfseries] at (axis cs:0, 0) {真值 $\mu$};
+
+        % 期望/均值位置 E(x) = 2.0
+        \draw[dashed, line width=1.2pt, color=primaryblue] (axis cs:2.0, 0) -- (axis cs:2.0, 0.45);
+        \node[below, color=primaryblue, font=\bfseries] at (axis cs:2.0, 0) {均值 $E(x)$};
+
+        % 某次测得值 x_i = 3.2
+        \draw[dashed, line width=0.8pt, color=purple] (axis cs:3.2, 0) -- (axis cs:3.2, 0.22);
+        \node[below, color=purple] at (axis cs:3.2, 0) {测得值 $x_i$};
+
+        % 系统误差箭头: mu -> E(x)
+        \draw[{Latex}-{Latex}, line width=1.2pt, color=accentred] (axis cs:0, 0.33) -- (axis cs:2.0, 0.33);
+        \node[above, color=accentred, font=\bfseries\small] at (axis cs:1.0, 0.33) {系统误差 $\varepsilon = E(x) - \mu$};
+
+        % 随机误差箭头: E(x) -> x_i
+        \draw[{Latex}-{Latex}, line width=1.2pt, color=blue!70!black] (axis cs:2.0, 0.20) -- (axis cs:3.2, 0.20);
+        \node[above, color=blue!70!black, font=\bfseries\small] at (axis cs:2.6, 0.20) {随机误差 $\eta_i$};
+
+        % 3-sigma 范围标记: 2.0 - 3.0 = -1.0 到 2.0 + 3.0 = 5.0
+        \draw[{Latex}-{Latex}, line width=1pt, color=gray!80] (axis cs:-1.0, 0.05) -- (axis cs:5.0, 0.05);
+        \node[above, color=gray!80] at (axis cs:2.0, 0.05) {正常随机波动区间: $\pm 3\sigma$ ($99.73\%$)};
+
+        % 粗大误差/奇异值: x = 6.8 (远超 3-sigma)
+        \node[circle, fill=red, inner sep=2.5pt] at (axis cs:6.8, 0.015) {};
+        \node[above, color=red, font=\bfseries\small] at (axis cs:6.8, 0.10) {粗大误差（奇异值）};
+        \draw[-{Latex}, color=red, line width=1pt] (axis cs:6.8, 0.09) -- (axis cs:6.8, 0.025);
+    \end{axis}
+\end{tikzpicture}
+\caption{测量数据概率分布模型与三类误差（系统、随机、粗大）关系分解示意图}
+\label{fig:error_decomposition}
+\end{figure}
+
+% =========================================================================
+% 第四部分：误差来源与有效数字运算修约规则
+% =========================================================================
+\section{误差来源与有效数字运算修约规则}
+
+\subsection{测量误差四大来源与标准器精度准则 \textnormal{[课件 P39--P41]}}
+
+\begin{enumerate}
+    \item \textbf{测量装置误差}：
+    \begin{itemize}
+        \item \textbf{标准器选用黄金准则 [课件 P41]}：一般要求标准器件自身体现的误差，占整个测量总允许误差的 $\mathbf{1/3 \sim 1/10}$。
+        \item 仪器结构原理误差（力学/光学简化近似带来的原理误差）；
+        \item 零部件加工装配误差、出厂定度标定误差；
+        \item 读数视差、机构摩擦回差、数字系统量化误差 ($\pm 1 \text{ LSB}$)、器件老化疲劳。
+    \end{itemize}
+    \item \textbf{环境误差}：偏离基准工作环境（标准温度 $20^\circ\text{C}$、气压 $101.325\text{ kPa}$、湿度、电磁屏蔽等）。
+    \item \textbf{方法误差}：测量理论模型近似（如小角度替代正弦）、测量基准不重合（违反阿贝原则）、工件弹性变形。
+    \item \textbf{人员误差}：调平对准习惯性偏好、读数估读偏差、生理反应滞后。
+\end{enumerate}
+
+\subsection{有效数字与相对误差的本质对应关系 \textnormal{[课件 P44--P47]}}
+
+\begin{defbox}{有效数字 (Significant Figures)}
+含有误差的近似数中，如果其绝对误差界不超过最末一位数字的\textbf{半个单位}（即 $\Delta \le \frac{1}{2} \times 10^{-m}$），则从左边第一个非零数字算起，到最末一位数字止的所有数字，不论是零或非零，均称为\textbf{有效数字}。
+\end{defbox}
+
+\subsubsection{有效数字位数的物理本质 [课件 P47 重点核心]}
+\begin{itemize}
+    \item 测量结果最末一位数字代表\textbf{可疑欠准位}，应与测量系统达到的实际精度量级保持一致。
+    \item \textbf{有效数字位数直接决定了相对误差的大小，而与小数点位置无关}！
+    \begin{itemize}
+        \item \textbf{2 位有效数字}（如 1.0 与 9.9）：其相对误差水平处在 $\pm 1\% \sim \pm 10\%$ 范围；
+        \item \textbf{3 位有效数字}（如 1.00 与 9.99）：其相对误差水平处在 $\pm 0.1\% \sim \pm 1\%$ 范围；
+        \item \textbf{4 位有效数字}（如 1.000 与 9.999）：其相对误差水平处在 $\pm 0.01\% \sim \pm 0.1\%$ 范围。
+    \end{itemize}
+    \item 相同有效数字位数的测量数据，无论量纲单位是米、毫米还是微米，其\textbf{相对测量精度处于同一水平级}。
+\end{itemize}
+
+\subsection{国家标准修约规则：“四舍六入五凑双” \textnormal{[课件 P48--P49]}}
+
+为了消除传统“四舍五入”引起的修约误差单向系统性正向偏置，国家标准 GB/T 8170 规定采用\textbf{“四舍六入五凑双” (Round half to even)}：
+\begin{enumerate}
+    \item 若被舍去部分首位数字 $< 5$：末位不变（四舍）。
+    \item 若被舍去部分首位数字 $> 5$：末位加 1（六入）。
+    \item 若被舍去部分首位数字 $= 5$，且 5 之后存在非零数字：末位加 1。
+    \item 若被舍去部分首位数字 $= 5$，且 5 之后无非零数字（全为 0 或无后续）：看保留部分的末位数字，\textbf{奇进偶不进（凑成偶数）}：
+    \begin{itemize}
+        \item 保留末位为奇数 $\implies$ 末位进 1 凑成偶数；
+        \item 保留末位为偶数（0 视为偶数） $\implies$ 末位不变。
+    \end{itemize}
+\end{enumerate}
+
+\begin{exambox}{修约两大铁律与避坑指南 [课件 P49]}
+\begin{enumerate}
+    \item \textbf{铁律一：严禁连续修约！}
+    \begin{itemize}
+        \item 必须根据确定的修约间隔或位数，\textbf{一次性修约到位}。
+        \item \textbf{反例警示}：将 $15.4546$ 修约到个位：
+        \begin{itemize}
+            \item 正确做法：直接看十分位为 $4 < 5$，修约结果为 $\mathbf{15}$。
+            \item 致命错误（连续修约）：$15.4546 \to 15.455 \to 15.46 \to 15.5 \to \mathbf{16}$（完全违背数值真相！）。
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{铁律二：修约误差的随机性}：采用“四舍六入五凑双”后，舍入误差的上界不超过保留末位的半个单位，且舍入误差关于零严格对称，期望为零，转化为纯粹的随机误差。
+\end{enumerate}
+\end{exambox}
+
+\subsection{数据运算保留规则与作业 3-4 详解 \textnormal{[作业 3-4]}}
+
+\begin{enumerate}
+    \item \textbf{加减法法则}：以所有参与运算的数据中\textbf{小数点后位数最少（即绝对误差最大）}的数据为基准，其余数据先修约至比基准数多保留一位参与运算，最终计算结果修约至与基准数相同的小数位数。
+    \item \textbf{乘除法法则}：以所有参与运算的数据中\textbf{有效数字位数最少（即相对误差最大）}的数据为基准，其余数据先修约至比基准数多一位有效数字，最终计算结果保留与基准数相同的有效数字位数。
+\end{enumerate}
+
+\begin{solbox}{作业 3-4 运算实战精解}
+\textbf{（1）计算加减法}：$3151.0 + 65.8 + 7.326 + 0.4162 + 152.28$
+\begin{itemize}
+    \item 各数小数位数：$3151.0$ (1位), $65.8$ (1位), $7.326$ (3位), $0.4162$ (4位), $152.28$ (2位)。
+    \item 基准为小数点后 1 位。其余数据可先过渡保留 2 位：
+    $$3151.0 + 65.8 + 7.33 + 0.42 + 152.28 = 3376.83$$
+    \item 最终结果按四舍六入五凑双修约至小数点后 1 位：$\mathbf{3376.8}$。
+\end{itemize}
+
+\textbf{（2）计算乘法}：$28.13 \times 0.037 \times 1.473$
+\begin{itemize}
+    \item 有效数字位数：$28.13$ (4位), $0.037$ (2位), $1.473$ (4位)。
+    \item 基准数为 $0.037$，仅有 \textbf{2 位有效数字}。
+    \item 计算：$28.13 \times 0.037 \times 1.473 = 1.53308\dots$
+    \item 最终结果保留 2 位有效数字：$\mathbf{1.5}$。
+\end{itemize}
+\end{solbox}
+
+% =========================================================================
+% 第五部分：§3-3 测量仪器、方法与结果的评价
+% =========================================================================
+\section{§3-3 测量仪器、方法与结果的评价指标}
+
+\subsection{精密度 vs 准确度及期末优先选用论述 \textnormal{[课件 P50--P54, 期末真题 P1]}}
+
+\begin{defbox}{精密度与准确度定义}
+\begin{itemize}
+    \item \textbf{精密度 (Precision)}：在规定测量条件下，对同一被测量进行多次独立重复测量所得各测得值之间的离散程度。反映\textbf{随机误差}的大小。精密度高说明测量分散性小、一致性好。
+    \item \textbf{准确度 (Accuracy)}：测量结果与被测量真值之间的一致程度。反映\textbf{系统误差}的大小。定性概念。
+    \item \textbf{精确度 (Exactness / Overall accuracy)}：精密度与准确度的综合评价，既准又精。
+\end{itemize}
+\end{defbox}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85]
+    % 靶子宏定义
+    \newcommand{\drawtarget}[4]{
+        \begin{scope}[shift={(#1,#2)}]
+            % 画同心圆靶盘
+            \foreach \r/\c in {2.2/gray!15, 1.6/gray!30, 1.0/gray!45, 0.4/primaryblue!50} {
+                \draw[fill=\c, draw=gray!60, line width=0.6pt] (0,0) circle (\r);
+            }
+            \draw[line width=0.8pt, color=primaryblue] (0,0) circle (0.4);
+            \draw[crosscolor, line width=0.6pt] (-2.3,0) -- (2.3,0);
+            \draw[crosscolor, line width=0.6pt] (0,-2.3) -- (0,2.3);
+            % 弹着点
+            #3
+            % 标题
+            \node[below, align=center, font=\small\bfseries] at (0,-2.5) {#4};
+        \end{scope}
+    }
+    \colorlet{crosscolor}{gray!60}
+
+    % 1. 高精密度，低准确度 (右下偏离密集)
+    \drawtarget{-4}{3.5}{
+        \foreach \x/\y in {1.1/1.1, 1.2/1.0, 1.0/1.2, 1.15/1.25, 0.95/1.05, 1.3/1.15} {
+            \fill[red] (\x,\y) circle (2.8pt);
+        }
+    }{(a) 高精密度，低准确度\\(系统误差大，随机误差小)}
+
+    % 2. 低精密度，高准确度 (均匀散布靶心周围)
+    \drawtarget{4}{3.5}{
+        \foreach \x/\y in {-1.3/0.8, 1.2/1.1, -0.9/-1.2, 1.4/-0.7, -0.2/1.5, 0.3/-1.4} {
+            \fill[red] (\x,\y) circle (2.8pt);
+        }
+    }{(b) 低精密度，高准确度\\(系统误差小，随机误差大)}
+
+    % 3. 高精密度，高准确度 (靶心密集)
+    \drawtarget{-4}{-3.5}{
+        \foreach \x/\y in {0.05/0.08, -0.06/0.05, 0.1/-0.05, -0.08/-0.06, 0.02/-0.02, 0.12/0.04} {
+            \fill[red] (\x,\y) circle (2.8pt);
+        }
+    }{(c) 高精密度，高准确度\\(系统与随机误差均小)}
+
+    % 4. 低精密度，低准确度 (散布偏离靶心)
+    \drawtarget{4}{-3.5}{
+        \foreach \x/\y in {1.2/0.6, 0.4/1.8, 1.8/1.6, -0.5/1.2, 1.6/-0.4, 0.9/1.3} {
+            \fill[red] (\x,\y) circle (2.8pt);
+        }
+    }{(d) 低精密度，低准确度\\(系统与随机误差均大)}
+\end{tikzpicture}
+\caption{精密度与准确度关系的打靶模型 (Target Model) 图解}
+\label{fig:target_model}
+\end{figure}
+
+\begin{exambox}{中科大期末真题压轴问答：精密度与准确度哪一个优先？为什么？[期末真题 10分]}
+\textbf{标准采分点答案}：
+\begin{enumerate}
+    \item \textbf{明确结论}：在仪表与测量方案设计中，\textbf{精密度指标应当优先考虑（精密度优先于准确度）}。
+    \item \textbf{根本理论依据与机理解析}：
+    \begin{itemize}
+        \item \textbf{系统误差的可修正性}：精密度高意味着测量结果的分散性极小（数据高度聚拢一致，随机误差极小）。虽然准确度可能较低（存在较大的固定系统误差，偏离靶心），但由于系统误差遵循固定确定性规律，我们可以通过高等级基准进行\textbf{精密标定、建立误差修正曲线或采用差分对称法}将该系统误差彻底消除，从而低成本获得既准又精的理想测量结果。
+        \item \textbf{随机误差的不可修正性}：反之，若精密度很差（随机离散极大），即便准确度很高（长期平均值恰好落在靶心），对于任何一次单次测量而言，读数波动的范围极大，\textbf{无法通过任何固定的代数修正值予以补偿}。单次测量结果极不可靠、置信度极低。
+    \end{itemize}
+\end{enumerate}
+\end{exambox}
+
+\subsection{动态与静态核心技术指标速查 \textnormal{[课件 P54--P58]}}
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{p{2.8cm}p{4.2cm}X}
+\toprule
+\textbf{技术指标} & \textbf{数学公式与定义 [课件 P54--58]} & \textbf{物理意义与要点} \\
+\midrule
+\textbf{重复性\newline\textit{(Repeatability)}} & $R_N = \dfrac{\sigma_r}{Y_m} \times 100\%$ & 在\textbf{相同条件}（同一实验室、同仪器、同人员、同一方法、短时间内）连续重复测量结果之间的一致程度。衡量系统随机误差。 \\
+\midrule
+\textbf{重现性 / 复现性\newline\textit{(Reproducibility)}} & 改变条件下的测量一致性 & 在\textbf{改变了的测量条件}（不同实验室、不同操作人员、不同仪器或较长时间跨度）下测定结果之间的一致性。 \\
+\midrule
+\textbf{灵敏度\newline\textit{(Sensitivity)}} & $S = \lim\limits_{\Delta x \to 0} \dfrac{\Delta y}{\Delta x} = \dfrac{\mathrm{d}y}{\mathrm{d}x}$ & 测试装置输出增量 $\Delta y$ 与引起该增量的输入增量 $\Delta x$ 之比。非线性装置各点灵敏度不同。 \\
+\midrule
+\textbf{线性度\newline\textit{(Linearity)}} & $L_N = \dfrac{\Delta L_{\max}}{Y_m} \times 100\%$ & 实际标定曲线与拟合理论直线之间的最大偏差 $\Delta L_{\max}$ 与满量程输出值 $Y_m$ 之比。也称非线性误差。 \\
+\midrule
+\textbf{分辨力 / 分辨率\newline\textit{(Resolution)}} & $\delta_{\text{res}} = \dfrac{\Delta x_{\min}}{x_{\max}} \times 100\%$ & 能引起测量装置输出量发生可察觉变化的\textbf{最小输入增量} $\Delta x_{\min}$。表明装置分辨微小输入变化的能力。 \\
+\bottomrule
+\end{tabularx}
+\caption{测量系统评价核心技术指标速查表}
+\end{table}
+
+% =========================================================================
+% 第六部分：§3-4 测量不确定度简介与误差对比
+% =========================================================================
+\section{§3-4 测量不确定度简介与误差对比}
+
+\subsection{测量不确定度的定义与结果表达 \textnormal{[课件 P59--P62]}}
+
+\begin{defbox}{测量不确定度 (Measurement Uncertainty) 定义}
+\textbf{VIM 第 3 版官方权威定义}：根据所用到的全部信息，表征赋予被测量量值分散性的\textbf{非负参数}。
+\begin{itemize}
+    \item “根据所用到的全部信息”：包含检定证书、规程、校准数据、环境参数、手册经验等。
+    \item “非负参数”：不确定度恒大于等于 0，绝无正负号。
+\end{itemize}
+\end{defbox}
+
+\subsubsection{测量结果的现代标准表达形式 [课件 P61--P62]}
+现代计量学中，单独一个测量数值毫无意义，\textbf{完整的测量结果必须附带其测量不确定度}：
+\begin{equation}
+    Y = y \pm U \quad (k = 2) \quad \text{或} \quad Y = y \pm U_{95} \quad (P = 95\%)
+\end{equation}
+其中 $y$ 为被测量的最佳估计值（经修正后的测得值或算术平均值），$U$ 为扩展不确定度，$k$ 为包含因子。
+
+\subsection{测量误差与测量不确定度的六大本质区别 \textnormal{[课件 P63--P64, P71 核心大题]}}
+
+\begin{table}[htbp]
+\centering
+\small
+\renewcommand{\arraystretch}{1.4}
+\begin{tabularx}{\textwidth}{p{2.6cm}Xp{6.2cm}}
+\toprule
+\textbf{对比维度} & \textbf{测量误差 (Error)} & \textbf{测量不确定度 (Uncertainty)} \\
+\midrule
+\textbf{1. 符号与形式} & 有明确的正号或负号（$\delta = x - \mu$），是单值代数量。单次测量绝对误差\textbf{绝不能写为 $\pm$}。 & 恒为\textbf{无符号的非负参数}。用标准差或置信区间半宽（$\pm U$）的形式表达分散区间。 \\
+\midrule
+\textbf{2. 参照中心} & \textbf{以客观真值 $\mu$ 为中心}，表征测量结果偏离真值的程度（“向心偏离”）。 & \textbf{以测得结果 $y$ 为中心}，评估因认知与测量不完善赋予量值可能的分散区间（“向外展宽”）。 \\
+\midrule
+\textbf{3. 客观性属性} & \textbf{客观存在}，是物理测量的客观偏差，不以人的主观认识程度而转移。 & \textbf{与主观认识密切相关}，反映评定者对被测量、测量方法、影响量及测量过程的掌握程度。 \\
+\midrule
+\textbf{4. 可知性与评定} & 客观真值严格不可知，故\textbf{真误差通常无法准确求得}；仅用约定真值时可获得估计值。 & \textbf{可以定量确定}，由人们根据实验统计分析（A类）或技术资料经验（B类）直接评定计算。 \\
+\midrule
+\textbf{5. 分类哲学} & 划分为\textbf{系统误差与随机误差}（基于无穷多次重复测量的理想极限概念）。 & 不区分性质，按\textbf{评定方法}划分为 \textbf{A 类和 B 类}（避免了误差性质划分的人为性与模糊性）。 \\
+\midrule
+\textbf{6. 修正功能} & 已知系统误差时，\textbf{可以直接通过修正值 $b = -\varepsilon$ 进行代数补偿修正}。 & \textbf{不能用于对测量结果进行修正}！对结果进行修正后，修正的不完善性反而会引入新的不确定度分量。 \\
+\bottomrule
+\end{tabularx}
+\caption{测量误差与测量不确定度本质区别对比表 (课件 P63--P64 核心权威总结)}
+\label{tab:error_vs_uncertainty}
+\end{table}
+
+\subsection{测量不确定度的 10 大来源归纳 \textnormal{[课件 P65--P66]}}
+\begin{enumerate}
+    \item \textbf{测量方法与原理}：对被测量定义不完善、复现方法不理想、数据计算常数不准、模型近似假定。
+    \item \textbf{测量仪器}：分辨力或鉴别阈不够、计量标准器或标准物质赋值不准。
+    \item \textbf{测量条件与环境}：对环境影响认识不周全、环境条件控制监测不完善。
+    \item \textbf{测量人员}：模拟指示仪表读数存在主观视差与心理偏差。
+    \item \textbf{被测对象自身}：抽样代表性不足、相同条件下被测量本身的微观物理跳动。
+\end{enumerate}
+
+\subsection{A 类与 B 类不确定度评定及合成传递架构 \textnormal{[课件 P67--P69]}}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    node distance=1.2cm and 1.8cm,
+    box/.style={rectangle, draw=primaryblue, fill=boxbgblue, rounded corners, inner sep=6pt, align=center, font=\small},
+    rootbox/.style={rectangle, draw=accentred, fill=boxbgred, rounded corners, inner sep=8pt, align=center, font=\bfseries\small},
+    arrow/.style={-{Latex[length=3mm]}, line width=1pt, color=primaryblue}
+]
+    % 第一层：A类与B类
+    \node[box] (A) {\textbf{A 类标准不确定度 $u_A$}\\[0.2em]统计学方法：贝塞尔公式\\[0.1em]$u_A = s(\bar{x}) = \dfrac{s}{\sqrt{n}}$};
+    \node[box, below=0.6cm of A] (B1) {\textbf{B 类标准不确定度 $u_{B1}$}\\[0.2em]仪器检定证书允差\\[0.1em]$u_{B1} = a_1 / k_1$};
+    \node[box, below=0.6cm of B1] (B2) {\textbf{B 类标准不确定度 $u_{B2}$}\\[0.2em]分辨力/温度等先验分布\\[0.1em]$u_{B2} = a_2 / k_2$};
+
+    % 第二层：合成标准不确定度
+    \node[box, right=2.0cm of B1] (uc) {\textbf{合成标准不确定度 $u_c$}\\[0.3em]方差加权合成\\[0.1em]$u_c = \sqrt{\sum c_i^2 u_i^2}$};
+
+    % 第三层：扩展不确定度
+    \node[rootbox, right=2.0cm of uc] (U) {\textbf{扩展不确定度 $U$}\\[0.3em]区间半宽\\[0.1em]$U = k \cdot u_c$\\[0.2em]($k=2, 3$)};
+
+    % 连线
+    \draw[arrow] (A.east) -- (uc.west);
+    \draw[arrow] (B1.east) -- (uc.west);
+    \draw[arrow] (B2.east) -- (uc.west);
+    \draw[arrow] (uc.east) -- node[above, font=\small, color=primaryblue]{包含因子 $k$} (U.west);
+\end{tikzpicture}
+\caption{测量不确定度评定、合成与扩展架构关系图}
+\label{fig:uncertainty_structure}
+\end{figure}
+
+\begin{defbox}{评定计算数学公式速查}
+\begin{enumerate}
+    \item \textbf{A 类评定 ($u_A$)}：通过实验独立观测列统计分析求得：
+    \begin{equation}
+        s(x) = \sqrt{\frac{\sum_{i=1}^n (x_i - \bar{x})^2}{n-1}}, \quad u_A = s(\bar{x}) = \frac{s(x)}{\sqrt{n}} = \sqrt{\frac{\sum_{i=1}^n (x_i - \bar{x})^2}{n(n-1)}}
+    \end{equation}
+    \item \textbf{B 类评定 ($u_B$)}：利用非统计信息，根据先验概率分布评定：
+    \begin{equation}
+        u_B = \frac{a}{k}
+    \end{equation}
+    其中 $a$ 为误差限半宽，$k$ 为先验分布包含因子速查：
+    \begin{itemize}
+        \item \textbf{正态分布}：置信度 $99.73\%$ 时 $k=3$；$95\%$ 时 $k=1.96$；
+        \item \textbf{均匀分布 / 矩形分布}（数字仪表分辨力、量化误差）：$k = \sqrt{3} \approx 1.732$；
+        \item \textbf{三角分布}：$k = \sqrt{6} \approx 2.449$；
+        \item \textbf{反正弦分布}（正弦波调制定度）：$k = \sqrt{2} \approx 1.414$。
+    \end{itemize}
+    \item \textbf{合成标准不确定度 ($u_c$)}：各输入分量互不相关时：
+    \begin{equation}
+        u_c = \sqrt{\sum_{i=1}^m c_i^2 u^2(x_i)} = \sqrt{u_A^2 + u_{B1}^2 + u_{B2}^2 + \dots}
+    \end{equation}
+    \item \textbf{扩展不确定度 ($U$)}：$U = k \cdot u_c$（工程上常取 $k=2$ 对应约 $95\%$ 置信度）。
+\end{enumerate}
+\end{defbox}
+
+% =========================================================================
+% 第七部分：典型例题与期末考点精析
+% =========================================================================
+\section{典型例题与期末考点精析}
+
+\subsection{例题 1：作业 3-1 试述误差的绝对值与绝对误差的异同}
+\begin{solbox}{标准解答}
+\begin{itemize}
+    \item \textbf{相同点}：二者的数值绝对大小相等，且具有与被测量相同的量纲和单位。
+    \item \textbf{不同点}：
+    \begin{enumerate}
+        \item \textbf{正负号属性}：绝对误差 $\delta = x - \mu$ 是代数量，\textbf{严格带有确定正负符号}（$+$ 或 $-$），反映测量值偏离真值的方向；而误差的绝对值 $|\delta|$ 恒为正值，丢失了偏离方向信息。
+        \item \textbf{修正功能}：绝对误差可以直接用来求修正值（$b = -\delta$）对测得值实施代数修正；而误差绝对值无法作为修正依据。
+    \end{enumerate}
+    \item \textbf{实例说明}：真值为 $10.0\text{ mm}$，测得值为 $9.8\text{ mm}$。绝对误差 $\delta = 9.8 - 10.0 = -0.2\text{ mm}$，修正值 $b = +0.2\text{ mm}$；误差绝对值 $|\delta| = 0.2\text{ mm}$。若仅知道误差绝对值为 $0.2\text{ mm}$，则无法判断原读数是偏大还是偏小，无法进行修正。
+\end{itemize}
+\end{solbox}
+
+\subsection{例题 2：作业 3-2 电压表检定与合格性判定}
+\begin{solbox}{题目与解答}
+\textbf{题目}：检定 2.5 级（引用误差限为 $2.5\%$）、全量程为 $100\text{ V}$ 的电压表，在 $50\text{ V}$ 刻度点发现示值误差 $2\text{ V}$ 为全量程最大误差，问该电压表是否合格？\\[0.5em]
+\textbf{解答步骤}：
+\begin{enumerate}
+    \item 该电压表允许的最大示值绝对误差限为：
+    $$\Delta_{\text{允许}} = \pm K\% \cdot Y_{\max} = \pm 2.5\% \times 100\text{ V} = \pm 2.5\text{ V}$$
+    \item 检定得到的最大绝对示值误差为 $|\Delta_{\max}| = 2\text{ V}$。
+    \item 判定准则：$|\Delta_{\max}| = 2\text{ V} \le 2.5\text{ V} = \Delta_{\text{允许}}$。
+    \item \textbf{结论}：最大示值误差未超出允许误差极限范围，\textbf{该电压表检定合格}。
+\end{enumerate}
+\end{solbox}
+
+\subsection{例题 3：作业 3-5 常见误差分布置信概率计算}
+\begin{solbox}{题目与解答}
+\textbf{题目}：试分别求出服从正态分布、均匀分布、反正弦分布的误差落在区间 $[-\sqrt{2}\sigma, +\sqrt{2}\sigma]$ 中的概率。\\[0.5em]
+\textbf{解答步骤}：
+\begin{enumerate}
+    \item \textbf{正态分布}：$x \sim N(0, \sigma^2)$。令标准化变量 $z = \frac{x}{\sigma}$，区间端点为 $z = \pm \sqrt{2} \approx \pm 1.414$。
+    查标准正态分布函数表可知 $\Phi(1.414) \approx 0.9213$。故置信概率为：
+    $$P_{\text{norm}} = 2\Phi(1.414) - 1 = 2 \times 0.9213 - 1 = \mathbf{84.27\%}$$
+    \item \textbf{均匀分布}：设误差在 $[-a, +a]$ 内均匀分布，其方差 $\sigma^2 = \frac{a^2}{3} \implies a = \sqrt{3}\sigma$。
+    考察区间 $[-\sqrt{2}\sigma, +\sqrt{2}\sigma]$ 包含在定义域 $[-a, a]$ 内，故落入概率为区间长度之比：
+    $$P_{\text{unif}} = \frac{2\sqrt{2}\sigma}{2a} = \frac{\sqrt{2}\sigma}{\sqrt{3}\sigma} = \sqrt{\frac{2}{3}} \approx \mathbf{81.65\%}$$
+    \item \textbf{反正弦分布}：概率密度 $f(x) = \frac{1}{\pi\sqrt{a^2 - x^2}}$（$|x| < a$），其方差 $\sigma^2 = \frac{a^2}{2} \implies a = \sqrt{2}\sigma$。
+    考察区间 $[-\sqrt{2}\sigma, +\sqrt{2}\sigma] = [-a, +a]$，恰好为该分布的\textbf{整个定义域全集}！因此：
+    $$P_{\text{arcsin}} = \int_{-a}^a \frac{1}{\pi\sqrt{a^2 - x^2}}\,\mathrm{d}x = \mathbf{100\%}$$
+\end{enumerate}
+\end{solbox}
+
+\subsection{例题 4：期末大题论述模板：误差与不确定度的区别与联系 \textnormal{[课件 P71 作业]}}
+\begin{solbox}{高分论述题答题模板}
+\textbf{论述要点组织}：
+\begin{enumerate}
+    \item \textbf{二者的联系 (Correlation)}：
+    \begin{itemize}
+        \item 目的相同：两者都是计量学中用以定量评价“测量质量与可靠程度”的核心概念；
+        \item 数学关联：不确定度评定中由随机效应引入的分量，反映了测量列中随机误差的分散性（实验标准差）；由系统效应引入的分量，反映了对未定系统误差极限范围的估计；对已知系统误差的修正不完善性构成了不确定度的来源之一。
+    \end{itemize}
+    \item \textbf{二者的核心区别 (Distinction)}：
+    \begin{itemize}
+        \item \textbf{定义与符号}：误差是有正负符号的代数量，不确定度恒为无符号非负参数；
+        \item \textbf{参照基准}：误差以客观真值为中心（向心），不确定度以实测结果为中心（向外）；
+        \item \textbf{客观性 vs 认知性}：误差客观存在不以人意志转移，不确定度与实验者认识水平密切相关；
+        \item \textbf{可知性}：真误差原则上不可知，不确定度完全可以由人定量评定；
+        \item \textbf{分类体制}：误差分为系统与随机误差，不确定度分为 A 类与 B 类评定；
+        \item \textbf{修正属性}：误差可用于对测得值实施修正补偿，不确定度绝不可用于修正。
+    \end{itemize}
+\end{enumerate}
+\end{solbox}
+
+\end{document}

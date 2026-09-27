@@ -1,0 +1,16 @@
+# 系统生成与临时文件
+desktop.ini
+Desktop.ini
+Thumbs.db
+.DS_Store
+*.tmp
+~$*
+
+# LaTeX 编译临时文件与日志
+*.aux
+*.log
+*.out
+*.toc
+*.nav
+*.snm
+*.synctex.gz

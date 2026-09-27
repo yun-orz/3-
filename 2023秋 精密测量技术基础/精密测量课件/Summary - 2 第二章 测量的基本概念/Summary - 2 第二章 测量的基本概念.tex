@@ -1,0 +1,810 @@
+\documentclass[11pt,a4paper]{ctexart}
+
+\usepackage[left=2.2cm, right=2.2cm, top=2.4cm, bottom=2.4cm]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, calc, decorations.pathreplacing, shapes.geometric, patterns}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    urlcolor=teal,
+    citecolor=blue
+}
+
+% 页眉页脚设置
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\kaishu 精密测量技术基础 · 核心讲义}
+\fancyhead[R]{\small\kaishu 第二章 测量的基本概念（含课本第一章概论）}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.6pt}
+
+% 自定义彩色框
+\newtcolorbox{pointbox}[1]{
+    colback=blue!3!white,
+    colframe=blue!70!black,
+    fonttitle=\bfseries\sffamily,
+    title=#1,
+    boxrule=0.8pt,
+    arc=2mm,
+    breakable
+}
+
+\newtcolorbox{exambox}[1]{
+    colback=red!3!white,
+    colframe=red!75!black,
+    fonttitle=\bfseries\sffamily,
+    title=【真题深度考点与解析】#1,
+    boxrule=0.8pt,
+    arc=2mm,
+    breakable
+}
+
+\newtcolorbox{formulabox}[1]{
+    colback=teal!3!white,
+    colframe=teal!70!black,
+    fonttitle=\bfseries\sffamily,
+    title=【核心公式】#1,
+    boxrule=0.8pt,
+    arc=2mm,
+    breakable
+}
+
+\title{\LARGE\bfseries 《精密测量技术基础》核心讲义与复习速查\\
+\vspace{4pt}
+\Large\kaishu 第二章 测量的基本概念（对应课本第一章《精密测量技术概论》）}
+\author{\small 授课参考：中国科学技术大学精密测量技术基础课程组 \\
+\small 教材参考：《精密测量技术》（李岩、花国梁主编）第一章}
+\date{\small 归纳整理日期：\today}
+
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+
+\begin{abstract}
+本讲义立足于课件《第二章 测量的基本概念》与统编教材《精密测量技术》（李岩主编）第一章《精密测量技术概论》，紧密结合中国科学技术大学历年期末考试重点题型（如名词解释、精度指标选取原则、几何量四大测量原则、支承变形推导及工程实战计算），进行系统化重构与精讲。内容涵盖测量的核心术语辨析、测量过程与分类体系、质量评价指标、四大几何测量原则（阿贝原则、封闭原则、最小变形原则、最短测量链原则）的严密物理模型与数学推导、光滑工件验收极限及圆弧样板综合误差评定实例。
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{测量的核心概念与术语辨析}
+
+\subsection{核心名词定义与对应英文（期末第一大题必考点）}
+在精密测量中，准确理解和区分与测量密切相关的技术术语是建立几何量计量体系的基石。本部分对应中国科学技术大学期末试卷第一大题（10分必考）。
+
+\begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+    \item \textbf{计量学 (Metrology)} \hfill\textsf{[课件 P2, 课本 P2]} \\
+    \textbf{定义}：研究测量、保证量值统一和准确的一门科学。其核心研究内容涵盖：计量单位及其基准/标准的建立、保存和使用；测量方法和计量器具；观测者能力；物理常数和材料特性的测定；计量法制与管理。
+    
+    \item \textbf{测量 (Measurement)} \hfill\textsf{[课件 P3, 课本 P2]} \\
+    \textbf{定义}：以确定被测对象的量值为目的而进行的一组操作或实验过程。测量必须具备明确的测量对象和作为标准的测量单位，其结果通常由数值和单位共同表示。
+    
+    \item \textbf{测试 (Test)} \hfill\textsf{[课件 P3, 课本 P2]} \\
+    \textbf{定义}：具有试验性质的测量，也可理解为试验和测量的全过程。通常用于探寻物理量随环境、时间或工况变化动态特性的场合。
+    
+    \item \textbf{试验 (Experiment)} \hfill\textsf{[课件 P3]} \\
+    \textbf{定义}：对产品的特性或性能进行测量、定性或分类所实施的实验活动。试验的对象是产品的性能（例如刚度、寿命、频响特性等），往往通过测量一组量并分析其关联规律得出结论。
+    
+    \item \textbf{检验 (Inspection)} \hfill\textsf{[课件 P3, 课本 P2]} \\
+    \textbf{定义}：判断被测物理量是否合格（是否在规定的公差或标准范围内）的过程，通常\textbf{不一定要求测出具体量值}。检验的主要对象是\textbf{工件/产品}。
+    
+    \item \textbf{检定 (Verification)} \hfill\textsf{[课件 P3, 课本 P2]} \\
+    \textbf{定义}：为评定计量器具的计量性能（准确度、稳定度、灵敏度等）是否符合法定要求所进行的全部工作。检定包括检查、加标记和出具检定证书，具有法制性。检定的主要对象是\textbf{计量器具}。
+    
+    \item \textbf{比对 (Comparison)} \hfill\textsf{[课件 P3, 课本 P2]} \\
+    \textbf{定义}：在规定条件下，对相同准确度等级或指定不确定度范围的同类基准、标准或工作用计量器具所复现的量值之间进行比较的过程。
+    
+    \item \textbf{校准 (Calibration)} \hfill\textsf{[补充重要概念]} \\
+    \textbf{定义}：在规定条件下，为确定计量仪器或测量系统所指示的量值与对应标准器复现的量值之间关系的一组操作，不具强制法制性，主要用于修正系统误差。
+\end{itemize}
+
+\subsection{核心术语对比与易错辨析}
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{核心术语多维度对比表}
+\label{tab:terminology_comparison}
+\begin{tabularx}{\textwidth}{l p{3.2cm} p{3.2cm} p{3.2cm} X}
+\toprule
+\textbf{术语名称} & \textbf{核心对象} & \textbf{主要目的} & \textbf{是否输出具体值} & \textbf{法制性/规范性} \\
+\midrule
+\textbf{测量} (Measurement) & 被测几何量/物理量 & 确定量值大小 & 是（数值+单位） & 技术活动 \\
+\textbf{测试} (Test) & 系统/过程动态量 & 试验探索特性与规律 & 是（含动态响应） & 技术/科研活动 \\
+\textbf{检验} (Inspection) & 工件 / 零件 & 判定是否合格 & 否（定性合格与否） & 质量控制规范 \\
+\textbf{检定} (Verification) & 计量器具 / 仪器 & 评定计量性能是否合规 & 是（评定多项指标） & 具有法定强制性 \\
+\textbf{比对} (Comparison) & 同等精度的同类标准 & 验证量值复现一致性 & 是（差值评估） & 计量比对规程 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{exambox}{检验 vs 检定 的关键区别}
+\textbf{常考问答点}：试阐述“检验”与“检定”在对象、目的与结果表征上的核心差异。\\
+\textbf{标准采分点}：
+\begin{enumerate}[leftmargin=1.5em, itemsep=2pt]
+    \item \textbf{对象不同}：“检验”的对象是\textbf{工件/产品}；“检定”的对象是\textbf{计量器具/仪器}。
+    \item \textbf{目的不同}：“检验”旨在判断工件几何量是否落在公差带内，从而定性给出合格判定；“检定”旨在全面评定仪器示值误差、灵敏度、稳定性是否满足国家规程要求。
+    \item \textbf{法定属性不同}：“检定”是具有法定强制性的技术监督活动，检定合格后出具检定证书或打上检定标记；而“检验”属于工业生产中的质量评定。
+\end{enumerate}
+\end{exambox}
+
+\newpage
+\section{测量过程与测量方法分类体系}
+
+\subsection{测量的基本方程式}
+从信息传递与比较角度看，测量实质上是将未知被测量与已知标准量进行比对并确定比值的过程。其通用数学模型为：
+\begin{equation}
+y = f(u)
+\end{equation}
+精密几何量测量中最理想的测量方程为线性且过原点形式：
+\begin{equation}
+y = K \cdot u
+\end{equation}
+式中：
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+    \item $y$ —— 被测量（广义长度）；
+    \item $u$ —— 测量单位（标准量）；
+    \item $K$ —— 测得的比值（仪器示值或转换系数）。
+\end{itemize}
+\begin{pointbox}{广义“长度”概念}
+在精密几何量测量中，“长度”是广义的，它不仅包括一维空间的一般线性尺寸（线值），还涵盖\textbf{角度}、\textbf{形状误差}（直线度、平面度、圆度、圆柱度）、\textbf{位置误差}（平行度、垂直度、同轴度、位置度）以及\textbf{表面粗糙度}等一切空间几何特征。
+\end{pointbox}
+
+\subsection{测量过程四要素}
+任何一个完整的测量系统均由以下四大基本要素构成 \hfill\textsf{[课件 P5, 课本 P2-3]}：
+\begin{enumerate}[leftmargin=1.5em, itemsep=4pt]
+    \item \textbf{测量对象和被测量 (Object and Measurand)}：
+    \begin{itemize}
+        \item 测量对象是所针对的实体（如工件、轴、孔、量具）。
+        \item 被测量是表征对象特征的特定物理量（如外径、螺距、齿形误差）。被测对象的几何尺寸、重量、刚性及精度等级是设计拟订测量方案的根本依据。
+    \end{itemize}
+    \item \textbf{测量单位和标准量 (Unit and Standard)}：
+    \begin{itemize}
+        \item 测量单位在物理世界中必须由特定的物质形式复现。
+        \item 物质体现形式主要包括：\textbf{光波波长}（自然基准）、\textbf{精密量块}（端面尺寸标准）、\textbf{线纹尺}（线纹标准）、\textbf{圆分度盘}（角度标准）、以及\textbf{光栅/磁栅/容栅}传感器等。
+    \end{itemize}
+    \item \textbf{测量方法 (Measurement Method)}：
+    \begin{itemize}
+        \item 完成测量任务所采用的原理、量具/量仪、测量条件（环境温湿度、振动防尘）、定位方式、瞄准与读数方法的总和。
+    \end{itemize}
+    \item \textbf{测量精度与不确定度 (Measurement Accuracy and Uncertainty)}：
+    \begin{itemize}
+        \item 表征测量结果可信赖程度与质量水平的量度。不给出测量不确定度的测量结果在工程和科研上不具备定量价值。
+    \end{itemize}
+\end{enumerate}
+
+\subsection{测量方法的分类维度}
+
+\begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+    \item \textbf{按是否直接获得被测量值划分}：
+    \begin{itemize}
+        \item \textbf{直接测量 (Direct Measurement)}：直接对被测量进行测量，仪器示值即为被测量的值（例如用游标卡尺测外径 $D$）。优点是操作简单、直观；
+        \item \textbf{间接测量 (Indirect Measurement)}：先测出与被测量具有确定已知函数关系的其他量，再通过数学公式计算出被测量（例如用弓高弦长法测量大圆弧直径，测出弓高 $H$ 与弦长 $L$，通过 $D = \frac{L^2}{4H} + H$ 计算 $D$）。
+    \end{itemize}
+    
+    \item \textbf{按有无已知标准量直接参与比较划分}：
+    \begin{itemize}
+        \item \textbf{绝对测量 (Absolute Measurement)}：仪器的读数装置直接反映被测量的全值（例如用普通钢板尺或卡尺读出绝对尺寸）。特点：量程大，但受刻线与结构累积误差影响，精度相对受限；
+        \item \textbf{相对测量 (Relative Measurement / Comparative Measurement)}：先用已知尺寸的标准件（如量块）将仪器调零，随后测量工件与标准件之间的微小偏差量 $\Delta L$，工件实际尺寸为 $L = L_0 + \Delta L$（例如立式光学计配合量块测轴径）。特点：测量范围受限，但由于标准量块精度极高且仪器只测微差，精度远高于绝对测量。
+    \end{itemize}
+
+    \item \textbf{按测头与工件表面是否接触划分}：
+    \begin{itemize}
+        \item \textbf{接触测量 (Contact Measurement)}：测头与被测表面直接发生机械接触（如卡尺、千分尺、电感测头）。优点：定位可靠、边界明确；缺点：存在接触变形、磨损与划伤工件风险，响应较慢；
+        \item \textbf{非接触测量 (Non-contact Measurement)}：基于光学、电磁、电容等场量耦合（如激光干涉仪、测量显微镜、电容位移传感器）。优点：无接触力变形、无磨损、动态响应高，适合薄壁、微纳或软质工件。
+    \end{itemize}
+
+    \item \textbf{按加工与生产流程划分}：
+    \begin{itemize}
+        \item \textbf{主动测量 / 在线测量 (Active / In-process Measurement)}：在工件加工过程中实时在线测量，并将测量信号实时反馈至机床控制系统控制切削进给，能在废品产生前主动预防超差；
+        \item \textbf{被动测量 / 离线测量 (Passive / Post-process Measurement)}：在工件加工完成后进行的合格性检验或终检，只能被动挑出废品，无法实时修正加工机床。
+    \end{itemize}
+\end{itemize}
+
+\newpage
+\section{测量质量评价与仪器选用指标（高频真题精解）}
+
+\subsection{精密度、正确度与准确度的严格区分}
+在现代测量技术与统计学规范中，准确度、精密度与正确度具有截然不同的物理意义 \hfill\textsf{[课本 P15-16, 突击笔记 P4]}：
+
+\begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+    \item \textbf{精密度 / 精度 (Precision)}：
+    \begin{itemize}
+        \item \textbf{本质}：表征测量结果中\textbf{随机误差}的大小程度。
+        \item \textbf{定义}：在相同规定条件下对同一被测量进行多次重复测量时，各测量值彼此之间相互吻合的程度。精密度反映了测量结果的\textbf{离散程度}（重复性），与真值无关。
+    \end{itemize}
+    
+    \item \textbf{正确度 (Trueness)}：
+    \begin{itemize}
+        \item \textbf{本质}：表征测量结果中\textbf{系统误差}的大小程度。
+        \item \textbf{定义}：无穷多次重复测量所得结果的平均值与真值（或约定真值）之间的一致程度。正确度高意味着系统误差极小，均值几乎无偏移。
+    \end{itemize}
+
+    \item \textbf{准确度 (Accuracy)}：
+    \begin{itemize}
+        \item \textbf{本质}：反映测量结果受\textbf{随机误差与系统误差综合影响}的程度。
+        \item \textbf{定义}：单次测量结果与被测量真值之间的一致程度。只有当精密度和正确度同时都很高时，测量结果的准确度才高。
+    \end{itemize}
+\end{itemize}
+
+\subsection{分辨率、灵敏度、重复性与重现性}
+\begin{itemize}[leftmargin=1.5em, itemsep=4pt]
+    \item \textbf{分辨率 / 分辨力 (Resolution)}：
+    测量仪器或系统能够有效检测并区分的被测量两个相邻量值之间的\textbf{最小变化量}。
+    
+    \item \textbf{灵敏度 (Sensitivity)}：
+    测量系统的输出变化量 $\Delta y$ 与引起该变化的输入被测量变化量 $\Delta x$ 的比值，即传递函数的导数 $S = \frac{\mathrm{d}y}{\mathrm{d}x}$。反映了仪器放大微小输入的能力。
+    
+    \item \textbf{重复性 (Repeatability)}：
+    在\textbf{相同的测量条件}下（同一操作者、同一仪器、同一环境地点、同一安装状态、短时间间隔内），对同一被测量进行连续多次测量所得示值的一致性。
+    
+    \item \textbf{重现性 / 再现性 (Reproducibility)}：
+    在\textbf{改变了的测量条件}下（不同操作者、不同仪器型号、不同实验室地点、较长时间间隔），对同一被测量进行测量所得示值的一致性。
+\end{itemize}
+
+\subsection{误差与测量不确定度的本质区别}
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+    \item \textbf{误差 (Error)}：$\Delta = x - x_0$（测量值减去真值）。真值在客观上是理想存在的未知量，因此误差是一个理想化的理论概念，其确切值永远不可确知，以\textbf{真值}为中心。
+    \item \textbf{测量不确定度 (Uncertainty)}：根据所有获取的信息，表征赋予被测量之值分散性的非负参数。不确定度是一个可以通过实验统计（A类）或先验资料（B类）定量计算并评定的操作性参数，以\textbf{测量结果（估计值）}为中心。
+\end{itemize}
+
+\begin{exambox}{期末考试核心大题：选用仪器时在精密度与准确度之间哪一个优先？}
+\textbf{真题题干}（2021~2022学年第1学期期末试题第二大题）：\\
+\emph{“解释下列名词：测量分辨率、测量精度、测量准确度、测量不确定度，并给出上述每个名词对应的英文单词。选用仪器时在精度（精密度）与准确度之间哪一个指标优先？为什么？”}
+
+\vspace{6pt}
+\textbf{标准考点采分答案与机理解析}：
+\begin{enumerate}[leftmargin=1.5em, itemsep=3pt]
+    \item \textbf{明确结论}：在精密测量工程中，通常\textbf{精密度（重复性）优先于准确度}。
+    \item \textbf{机理解释一（系统误差的可修正性）}：
+    准确度包含系统误差和随机误差两个成分。系统误差具有确定性规律，\textbf{可以通过定标校准、相对测量（如与高精度量块比对）、对称抵消法（如正反转测量）或理论建模进行修正和补偿}。因此，即使仪器的示值存在系统偏差（即准确度暂时不高），只要其精密度高，就可以通过标定或比对将系统偏差剔除，从而达到极高的测定精度。
+    \item \textbf{机理解释二（随机误差的不可直接修正性）}：
+    精密度直接反映了系统固有的随机噪声与不可控离散性。若一台仪器的精密度很差（离散度极大），单次测量结果具有不可预知的漂移与分散，此时任何单次测量值都无法信任，也无法通过简单的偏移校正得到真值。
+    \item \textbf{工程例外补充说明}：
+    只有在\textbf{无法进行任何校准、无法使用标准件进行比较测量、且必须依赖单次直接读数给出绝对结果}的特殊低成本工业检测场合，且仪器自带出厂准确度保证时，才会直接优先考核仪器的示值准确度。
+\end{enumerate}
+\end{exambox}
+
+\newpage
+\section{几何量测量的四大基本原则（深度专题）}
+
+为了在精密测量中有效抑制几何、力学及环境误差，经过百余年测量实践总结出四条最基本的测量指导原则：\textbf{阿贝原则}、\textbf{封闭原则}、\textbf{最小变形原则}、\textbf{最短测量链原则} \hfill\textsf{[课件 P14-P37, 课本 P3-P10]}。
+
+\subsection{阿贝原则 (Abbé Principle / In-line Principle)}
+\subsubsection{定义与内涵}
+1890年德国光学家恩斯特·阿贝（Ernst Abbe）提出：
+\begin{quote}
+\textbf{“在长度测量中，应将被测件的测量轴线与作为标准量的标准尺测量轴线沿同一直线排列（串联排列）。”}
+\end{quote}
+阿贝原则是几何量仪器设计与测量布局中最重要的第一原则。
+
+\subsubsection{串联布线与并联布线的误差严密推导}
+在长度测量装置中，由于导轨制造及装配不可避免地存在直线度与间隙误差，滑块在沿导轨移动时必将伴随微小的角度摆动（转角为 $\varphi$，通常为微弧度级别）。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9, >=Stealth]
+    % (a) 并联布线
+    \begin{scope}[shift={(0,0)}]
+        \draw[thick] (0, 2.5) -- (6, 2.5) node[right] {\small 导轨};
+        \draw[dashed, blue!80!black, thick] (0, 1.8) -- (6, 1.8) node[right] {\small 标准尺轴线};
+        \draw[dashed, red!80!black, thick] (0, 0.4) -- (6, 0.4) node[right] {\small 被测件轴线};
+        
+        % 间距 s
+        \draw[<->, gray, thick] (0.8, 0.4) -- (0.8, 1.8) node[midway, left] {$s$};
+        
+        % 竖直立柱（位置 I 虚线）
+        \draw[gray, dotted, thick] (2, 0.2) -- (2, 2.5);
+        
+        % 倾斜立柱（位置 II 实线）
+        \draw[very thick, rotate around={-8:(2.5, 2.5)}] (2.5, 0.1) -- (2.5, 2.5);
+        \draw[dashed] (2.5, 2.5) -- (2.5, 0.1);
+        \draw[->] (2.5, 0.8) arc (-90:-98:1.7) node[below] {$\varphi$};
+        
+        % 误差投影
+        \draw[<->, red, thick] (2.5, 0.4) -- (2.8, 0.4) node[above=1pt] {\small $\Delta \approx s\varphi$};
+        \node at (3, -0.4) {\small\textbf{(a) 并联布线（违背原则，一次误差 $\Delta \approx s\varphi$）}};
+    \end{scope}
+
+    % (b) 串联布线
+    \begin{scope}[shift={(8.0,0)}]
+        \draw[thick] (0, 2.5) -- (6.5, 2.5) node[right] {\small 导轨};
+        \draw[dashed, teal!80!black, thick] (0, 1.0) -- (6.5, 1.0) node[right] {\small 共线测量轴线};
+        
+        \node[above, blue!80!black] at (1.5, 1.0) {\small 标准尺};
+        \node[above, red!80!black] at (4.5, 1.0) {\small 被测件};
+        \draw[fill=black] (3.0, 1.0) circle (2pt);
+        
+        % 移动测杆
+        \draw[very thick, rotate around={-6:(3.0, 2.5)}] (3.0, 0.7) -- (3.0, 2.5);
+        \draw[dashed] (3.0, 2.5) -- (3.0, 0.7);
+        \draw[->] (3.0, 1.5) arc (-90:-96:1.0) node[below] {$\varphi$};
+        
+        \node at (3.2, -0.4) {\small\textbf{(b) 串联布线（符合原则，二次误差 $\Delta \approx \frac{1}{2}l\varphi^2$）}};
+    \end{scope}
+\end{tikzpicture}
+\caption{并联布线与串联布线的导轨角摆误差几何机理图}
+\label{fig:abbe_principle}
+\end{figure}
+
+\begin{formulabox}{阿贝误差定量计算公式对比}
+\begin{enumerate}[leftmargin=1.5em, itemsep=3pt]
+    \item \textbf{并联布线（违背阿贝原则）}：
+    标准尺轴线与被测轴线不重合，相距偏置距离 $s$。当滑座在导轨上移动产生倾角 $\varphi$ 时，引起的测量误差为：
+    \begin{equation}
+    \Delta = s \tan\varphi \approx s \cdot \varphi \quad (\text{一阶/一次大误差})
+    \end{equation}
+    \emph{量级估算}：若偏置距离 $s = 100\text{ mm}$，导轨角摆 $\varphi = 10'' \approx 5 \times 10^{-5}\text{ rad}$，则产生的一次误差高达：
+    \[ \Delta = 100\text{ mm} \times (5 \times 10^{-5}) = 5\,\mu\text{m} \]
+    
+    \item \textbf{串联布线（符合阿贝原则）}：
+    标准尺轴线与被测件轴线严格同轴共线（$s = 0$）。此时两瞄准指示器间距为 $l$，导轨角摆 $\varphi$ 引起的测量误差为：
+    \begin{equation}
+    \Delta = l (1 - \cos\varphi) \approx \frac{1}{2} l \varphi^2 \quad (\text{二阶/二次小误差})
+    \end{equation}
+    \emph{量级估算}：取相同导轨跨度 $l = 1000\text{ mm}$，$\varphi = 10''$，则产生的二次误差仅为：
+    \[ \Delta \approx \frac{1}{2} \times 1000\text{ mm} \times (5 \times 10^{-5})^2 = 0.00125\,\mu\text{m} \approx 1.25\,\text{nm} \]
+    串联误差相比并联误差足足缩小了数千倍！
+\end{enumerate}
+\end{formulabox}
+
+\subsubsection{采用阿贝原则的工程意义与仪器判定}
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+    \item \textbf{设计意义}：避免了导轨角摆引起的一次大误差。在仪器设计中，遵守阿贝原则允许\textbf{大幅度放宽对导轨直线度与精度的加工要求}，降低制造成本，同时大幅提高仪器的测量精度。
+    \item \textbf{使用与改进意义}：若仪器因结构限制无法避免并联（如游标卡尺），必须：
+    \begin{enumerate}[label=(\alph*)]
+        \item 尽量\textbf{减小测量偏置距离 $s$}（如卡尺测量时工件尽量贴近主尺尺身根部）；
+        \item 采用\textbf{光学补偿原理（埃彭斯坦 Eppenstein 原理）}，通过透镜焦距光学折射抵消角摆偏移；
+        \item 提高导轨刚度与直线度以压低 $\varphi$。
+    \end{enumerate}
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{典型几何量仪器阿贝原则符合性判定表}
+\label{tab:abbe_instruments}
+\begin{tabularx}{\textwidth}{l c p{4.5cm} X}
+\toprule
+\textbf{测量器具名称} & \textbf{是否符合阿贝原则} & \textbf{几何布线特征} & \textbf{误差控制对策 / 评价} \\
+\midrule
+\textbf{游标卡尺} & \textbf{违背}（并联） & 量爪延伸测量，测量轴线距主尺刻线相距 $s$ & 产生一次大误差，测量时应贴近尺身根部 \\
+\textbf{外径千分尺} & \textbf{符合}（串联） & 测微螺杆与固定砧座测量线严格同轴 & 仅有微小二次误差，同尺寸下精度远高于卡尺 \\
+\textbf{阿贝测长仪} & \textbf{符合}（串联） & 标准线纹尺与被测件在同轴测量线上 & 纵向比长精度极高 \\
+\textbf{万能测长机} & \textbf{违背}（并联大尺寸） & 采用并联大跨度布线 & 引入埃彭斯坦光学反光棱镜进行一次误差自动补偿 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{封闭原则 (Closed Principle)}
+\subsubsection{原理内涵}
+\textbf{封闭原则}：在圆周分度或封闭环几何测量中，凡是满足几何闭合条件的物理量，其\textbf{各个分度间隔的实际偏差之代数和必然为零} \hfill\textsf{[课件 P24, 课本 P5]}。
+\begin{equation}
+\sum_{i=1}^n \Delta\varphi_i = 0
+\end{equation}
+
+\subsubsection{自检法（自测）核心应用}
+封闭原则的最大工程价值在于实现\textbf{自检法 (Self-testing Method)}：\textbf{无需高一级的标准器具，仅利用被检系统本身的闭合约束，即可解算出各个分度间隔的真实误差值}。
+
+\subsubsection{典型算例：方形角尺四面垂直度自检法数学模型}
+如图所示，将待检方形角尺置于平板上，用自准直仪以相邻两面法线夹角 $\alpha$ 为未知比较基准，依次旋转 $90^\circ$ 测出四组读数偏差 $e_1, e_2, e_3, e_4$：
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85, >=Stealth]
+    % 方形角尺
+    \draw[thick, fill=blue!5] (0,0) rectangle (3,3);
+    \draw[dashed, gray] (0,0) -- (3,3);
+    \node at (0.5, 0.5) {\textbf{1}};
+    \node at (2.5, 0.5) {\textbf{2}};
+    \node at (2.5, 2.5) {\textbf{3}};
+    \node at (0.5, 2.5) {\textbf{4}};
+    \node at (1.5, 1.5) {\small 方形角尺};
+    
+    % 平板基底
+    \fill[pattern=north east lines, pattern color=gray] (-0.5, -0.4) rectangle (3.5, 0);
+    \draw[thick] (-0.5, 0) -- (3.5, 0) node[right] {\small 平板工作台};
+    
+    % 自准直仪
+    \draw[thick, fill=teal!10] (4.5, 1.0) rectangle (6.5, 2.0);
+    \node at (5.5, 1.5) {\small 自准直仪};
+    \draw[->, thick, red] (4.5, 1.5) -- (3.0, 1.5);
+    \draw[<-, thick, red] (4.5, 1.6) -- (3.0, 1.6);
+\end{tikzpicture}
+\caption{方形角尺四面自检法测量原理}
+\label{fig:square_autocheck}
+\end{figure}
+
+\begin{formulabox}{方形角尺自检计算推导}
+设第 $i$ 个实际直角为 $\varphi_i = 90^\circ + \Delta\varphi_i$，自准直仪定角为 $\alpha = 90^\circ + \Delta\alpha$。自准直仪测得读数为 $e_i$：
+\begin{equation}
+\Delta\varphi_i = \Delta\alpha + e_i \quad (i=1, 2, 3, 4)
+\end{equation}
+将 4 个方程两边分别求和：
+\[ \sum_{i=1}^4 \Delta\varphi_i = 4\Delta\alpha + \sum_{i=1}^4 e_i \]
+由空间 $360^\circ$ 自然闭合条件知：$\sum_{i=1}^4 \Delta\varphi_i = 0$。由此立即可解出未知的定角偏差 $\Delta\alpha$：
+\begin{equation}
+\Delta\alpha = -\frac{1}{4} \sum_{i=1}^4 e_i
+\end{equation}
+将 $\Delta\alpha$ 反代回各方程，即可求得角尺 4 个直角的真实绝对角误差：
+\begin{equation}
+\Delta\varphi_i = e_i - \frac{1}{4} \sum_{j=1}^4 e_j
+\end{equation}
+\textbf{结论}：最终测量精度完全不受标准角尺本身误差制约，仅取决于自准直仪本身的读数分辨力与精度！
+\end{formulabox}
+
+\subsection{最小变形原则 (Principle of Minimum Deformation)}
+\textbf{原则}：为使测量结果准确可靠，在测量全过程中应设法使由各物理因素引起的工件与仪器变形减至最小 \hfill\textsf{[课件 P27-P36, 课本 P8-P10]}。引起形变的主要源头包括：\textbf{自重变形}、\textbf{接触变形}与\textbf{热变形}。
+
+\subsubsection{自重变形与最佳支承点（白塞尔点 vs 艾利点）}
+长形工件（如长量块、基准标尺、导轨心棒）在自身重力作用下水平放置时会发生弯曲下垂。为了减小重力弯曲对尺寸和形状精度的危害，必须对称设置两个最佳支承点（距两端距离为 $a$，两支承点跨距为 $b = L - 2a$）。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9, >=Stealth]
+    % 梁
+    \draw[thick, fill=orange!10] (0, 0.8) rectangle (8, 1.3);
+    \draw[dashed, blue] (0, 1.05) -- (8, 1.05) node[right] {\small 中性轴};
+    
+    % 支承点 A (左)
+    \draw[thick, fill=gray!30] (1.69, 0.3) -- (1.54, 0.8) -- (1.84, 0.8) -- cycle;
+    \fill (1.69, 0.8) circle (2pt);
+    
+    % 支承点 B (右)
+    \draw[thick, fill=gray!30] (6.31, 0.3) -- (6.16, 0.8) -- (6.46, 0.8) -- cycle;
+    \fill (6.31, 0.8) circle (2pt);
+    
+    % 尺寸标注
+    \draw[<->, thick] (0, 1.6) -- (8, 1.6) node[midway, above] {$L$};
+    \draw[<->, thick] (0, 0.1) -- (1.69, 0.1) node[midway, below] {$a$};
+    \draw[<->, thick] (1.69, 0.1) -- (6.31, 0.1) node[midway, below] {$b = L - 2a$};
+    \draw[<->, thick] (6.31, 0.1) -- (8, 0.1) node[midway, below] {$a$};
+\end{tikzpicture}
+\caption{长工件双点水平对称支承模型}
+\label{fig:beam_support}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{白塞尔点与艾利点参数及物理意义对比表（课后作业必考）}
+\label{tab:bessel_airy}
+\begin{tabularx}{\textwidth}{l c c p{4.2cm} X}
+\toprule
+\textbf{支承点名称} & \textbf{悬臂端距 $a$} & \textbf{支点跨距 $b$} & \textbf{核心物理优化目标} & \textbf{典型工程应用场合} \\
+\midrule
+\textbf{白塞尔点} (Bessel Points) & $0.2232 L \approx \frac{2}{9}L$ & $0.5536 L$ & \textbf{杆中性轴总长度变化量最小}（伸长/缩短变形抵消） & \textbf{线纹尺}、光栅标尺线值比长测量 \\
+\textbf{艾利点} (Airy Points) & $0.2113 L \approx \frac{4}{19}L$ & $\frac{1}{\sqrt{3}}L \approx 0.5774 L$ & \textbf{杆两端截面倾角为零}（端面在空间保持垂直且相互平行） & \textbf{端面平齐量块}、端面比长块规检定 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection{接触变形（赫兹弹性接触理论）}
+在机械接触测量中，测头在测力 $p$ 作用下压紧工件表面，接触区域产生局部弹性接触压缩压陷量 $f$ \hfill\textsf{[课本 P8-P9]}。
+\begin{formulabox}{典型接触形式的赫兹弹性变形公式}
+\begin{enumerate}[leftmargin=1.5em, itemsep=3pt]
+    \item \textbf{球对圆柱（或球对球）}：
+    \begin{equation}
+    f = K_1 \sqrt[3]{p^2 \left( \frac{1}{d} + \frac{1}{D} \right)} \quad (\mu\text{m})
+    \end{equation}
+    式中：$p$ 为测力 (N)；$d$ 为球测头直径 (mm)；$D$ 为被测圆柱直径 (mm)；$K_1$ 为材料系数（钢对钢取 $K_1 = 0.415$）。
+    
+    \item \textbf{球对平面}：相当于 $D \to \infty$，化简为：
+    \begin{equation}
+    f = K_1 \sqrt[3]{\frac{p^2}{d}} \quad (\mu\text{m})
+    \end{equation}
+    
+    \item \textbf{平面对圆柱}：
+    \begin{equation}
+    f = K_2 \frac{p}{l} \sqrt[3]{\frac{1}{D}} \quad (\mu\text{m})
+    \end{equation}
+    式中：$l$ 为平面测头接触长度 (mm)；$K_2$ 为材料常数（钢对钢取 $K_2 = 0.042$）。
+\end{enumerate}
+\end{formulabox}
+
+\textbf{抑制接触变形的工程途径}：
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+    \item \textbf{相对测量法}：调零标准件与被测件采用同材质、同曲率测头，使两次测量的压陷变形完全相互抵消（例如三针法测螺纹中径）；
+    \item \textbf{优化接触形式与增大曲率}：尽量采用大直径测头或平面测头，降低局部接触应力；
+    \item \textbf{微力控制与电眼对准}：利用电气接触或光电微动对准，将测量力限制在微牛/毫牛级别。
+\end{itemize}
+
+\subsection{最短测量链原则 (Principle of Shortest Measurement Chain)}
+\textbf{原则}：从感受被测量到最终指示装置读出数值，测量系统所包含的\textbf{测量链、指示链和辅助机构的转换环节应尽可能减少到最低限度} \hfill\textsf{[课件 P37]}。\\
+\textbf{机理}：由于测量链中每个环节均不可避免地引入机械间隙、运动误差、弹性迟滞及传动非线性，串联环节越多，累计总误差越大（遵循方差合成律 $\sigma_{\Sigma}^2 = \sum \sigma_i^2$），系统可靠性越差。
+
+\newpage
+\section{测量方法选择规范与环境控制}
+
+\subsection{公差原则与测量经济性原则}
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+    \item \textbf{基本原则}：在\textbf{充分保证测量精度的前提下，选择最经济、最简便}的测量方法与仪器 \hfill\textsf{[课件 P39]}。
+    \item \textbf{加工公差与测量误差的分配博弈}：工件的总允许公差带由加工误差和测量误差两部分共同占有。
+    \begin{itemize}
+        \item 若分配给测量的允许误差过大，则留给机床的加工公差就极小，导致机械加工报废率剧增、制造成本大幅抬高；
+        \item 若将测量误差压缩得过小，则必须采用超高精度仪器与严苛恒温环境，导致测量检验成本激增。
+    \end{itemize}
+    \item \textbf{公差分配工程准则}：在一般光滑工件的常规检测中，测量方法的允许极限误差 $\Delta_{\lim}$ 通常取被测工件公差 $T$ 的：
+    \begin{equation}
+    \Delta_{\lim} = \left(\frac{1}{3} \sim \frac{1}{10}\right) T
+    \end{equation}
+\end{itemize}
+
+\subsection{安全裕度 $A$ 与验收极限 (Acceptance Limits)}
+为了防止测量误差导致误收废品（把实际超差的零件误判为合格），国家标准规定在工件最大实体极限和最小实体极限处分别设置\textbf{安全裕度 $A$}，形成\textbf{验收极限} \hfill\textsf{[课件 P40-P41, 课本 P15]}。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9, >=Stealth]
+    % 制造公差带
+    \draw[thick, fill=green!10] (0, 0) rectangle (8, 2);
+    \node at (4, 1.6) {\textbf{工件设计制造公差带 $T$}};
+    
+    % 上极限与下极限
+    \draw[dashed, red, thick] (0, 2.5) -- (0, -0.5) node[below] {\small 最小实体尺寸 (LML)};
+    \draw[dashed, red, thick] (8, 2.5) -- (8, -0.5) node[below] {\small 最大实体尺寸 (MML)};
+    
+    % 安全裕度 A 阴影
+    \fill[red!20] (0, 0) rectangle (1.2, 2);
+    \fill[red!20] (6.8, 0) rectangle (8, 2);
+    \draw[<->, thick] (0, 0.4) -- (1.2, 0.4) node[midway, above] {$A$};
+    \draw[<->, thick] (6.8, 0.4) -- (8, 0.4) node[midway, above] {$A$};
+    
+    % 验收公差带
+    \draw[very thick, blue] (1.2, -0.2) -- (1.2, 2.2) node[above] {\small 下验收极限};
+    \draw[very thick, blue] (6.8, -0.2) -- (6.8, 2.2) node[above] {\small 上验收极限};
+    
+    \draw[<->, very thick, blue] (1.2, 0.9) -- (6.8, 0.9) node[midway, fill=green!10] {\textbf{合格验收区域（内缩安全裕度）}};
+\end{tikzpicture}
+\caption{光滑工件公差带与内缩验收极限设置示意图}
+\label{fig:acceptance_limits}
+\end{figure}
+
+\begin{formulabox}{验收极限计算公式}
+验收极限是从规定的工件设计极限尺寸分别\textbf{向工件公差带内部内缩}一个安全裕度 $A$：
+\begin{align}
+\text{上验收极限} &= \text{最大实体尺寸 (MML)} - A \\
+\text{下验收极限} &= \text{最小实体尺寸 (LML)} + A
+\end{align}
+\textbf{作用}：凡是测量值落在内缩验收极限之内的零件，即便是最不利测量误差叠加，其真实尺寸也必然不会超出原始工程公差带，从而严密杜绝了误收废品的风险。
+\end{formulabox}
+
+\subsection{基面统一原则与定位基准选择}
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+    \item \textbf{测量基面}：测量时用作被测几何量起始所依据的基准点、线、面。
+    \item \textbf{基面统一原则}：拟订测量方案时，\textbf{测量基面应尽量与工件的设计基面、工艺（加工）基面、装配基面保持统一重合} \hfill\textsf{[课件 P43]}。若不重合，将引入额外的基准转换计算与基准不重合误差。
+    \item \textbf{典型定位形态}：
+    \begin{itemize}
+        \item 平面定位：工作台或平尺定位；
+        \item 外圆柱定位：高精度 V 形块对称定位；
+        \item 内圆柱定位：膨胀式定心心轴定位；
+        \item 轴线定位：双顶尖支承定位。
+    \end{itemize}
+\end{itemize}
+
+\subsection{测量环境与综合温度误差计算模型}
+环境温度是精密几何量测量中最重要、最敏感的误差源。国家标准规定\textbf{标准测量基准温度为 $20^\circ\mathrm{C}$} \hfill\textsf{[课件 P45-P46, 课本 P11]}。
+
+\begin{formulabox}{综合温度误差计算公式}
+设被测工件长度尺寸为 $L$，工件材料线膨胀系数为 $a_1$，测量时工件温度为 $t_1$；量仪标尺材料线膨胀系数为 $a_2$，量仪温度为 $t_2$。则由于温度偏差引起的单向系统测量误差为：
+\begin{equation}
+\Delta L = L \left[ a_1 (t_1 - 20^\circ) - a_2 (t_2 - 20^\circ) \right]
+\end{equation}
+\end{formulabox}
+
+\begin{pointbox}{四种典型工况分析与等温工程启示}
+\begin{enumerate}[leftmargin=1.5em, itemsep=3pt]
+    \item \textbf{工况一（$a_1 = a_2$ 且 $t_1 = t_2 \ne 20^\circ\mathrm{C}$）}：
+    代入公式得 $\Delta L = 0$！\\
+    \textbf{深刻工程启示}：只要工件与测量仪器的材料线膨胀系数完全一致，且二者处于相同的热平衡温度，\textbf{即使环境温度偏离 $20^\circ\mathrm{C}$，热胀冷缩量完全等额抵消，也不会产生温度误差}！
+    \item \textbf{工况二（$a_1 \ne a_2$ 且 $t_1 = t_2$）}：$\Delta L = L (a_1 - a_2)(t_1 - 20^\circ)$。误差由材料热膨胀系数差造成。
+    \item \textbf{工况三（$a_1 = a_2$ 但 $t_1 \ne t_2$）}：$\Delta L = a L (t_1 - t_2)$。工件与量仪的瞬态温差是产生测量误差的绝对主力！
+    \item \textbf{防热对策}：
+    测量前工件与量仪必须同室放置足够长时间以实现\textbf{等温}；严禁手掌直接大面积抓握工件与高精度量块（必须佩戴隔热棉手套或使用木夹钳）；避免阳光直射与仪器光源局部热辐射。
+\end{enumerate}
+\end{pointbox}
+
+\newpage
+\section{综合工程案例与课后作业推导精解}
+
+\subsection{经典案例：圆弧薄片样板半径的间接测量方案设计}
+\noindent\textbf{工程问题} \hfill\textsf{[课件 P48-P53, 课本 P12-P15]}：\\
+设有厚度为 $1\text{ mm}$ 的圆弧薄片样板，基本尺寸弦长 $s = 23.664\text{ mm}$，弓高 $h = 10\text{ mm}$。试拟定对圆弧半径 $R = 12_{-0.01}^{0}\text{ mm}$ 的测量方案并评定其测量结果与合格性。
+
+\subsubsection{第一步：选定测量方法与仪器}
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+    \item 由于样板厚度仅 $1\text{ mm}$ 且为薄钢片，接触式探针易引起弯曲变形且测头难以在薄刃边缘稳定定位，故宜选用\textbf{非接触光学影像测量法}。
+    \item 圆弧并非完整整圆，半径无法直接读出，采用\textbf{弓高弦长间接测量法}。
+    \item 选用大型工具显微镜（大工显），在平面直角坐标系中通过十字分划线影像对线，测得弓高 $h$ 和弦长 $s$。
+\end{itemize}
+
+\subsubsection{第二步：建立几何函数关系与误差全微分方程}
+根据几何弦心距勾股定理：
+\[ R^2 = \left(\frac{s}{2}\right)^2 + (R - h)^2 = \frac{s^2}{4} + R^2 - 2Rh + h^2 \]
+化简解出被测半径 $R$ 的间接测量函数方程：
+\begin{equation}
+R = \frac{s^2}{8h} + \frac{h}{2}
+\end{equation}
+对 $R$ 进行全微分以求出传递系数（偏导数）：
+\begin{equation}
+\mathrm{d}R = \frac{\partial R}{\partial s} \mathrm{d}s + \frac{\partial R}{\partial h} \mathrm{d}h = \left(\frac{s}{4h}\right) \mathrm{d}s - \left(\frac{s^2}{8h^2} - \frac{1}{2}\right) \mathrm{d}h
+\end{equation}
+
+\subsubsection{第三步：系统误差与合成随机极限误差计算}
+假定大工显实测数值为：$h = 10.002\text{ mm}$，$\Delta h = +0.002\text{ mm}$；$s = 23.660\text{ mm}$，$\Delta s = -0.004\text{ mm}$。
+\begin{enumerate}[leftmargin=1.5em, itemsep=3pt]
+    \item \textbf{系统尺寸偏差代数计算}：
+    \[ \Delta R = \frac{23.664}{4 \times 10} \times (-0.004) - \left( \frac{23.664^2}{8 \times 10^2} - \frac{1}{2} \right) \times (+0.002) = -0.0024 - 0.0004 = -0.0028\text{ mm} \]
+    
+    \item \textbf{大工显仪器测量极限误差}：
+    根据大型工具显微镜出厂检定公式（单位 $\mu\text{m}$，其中 $L$ 为测长，$H$ 为测量高度）：
+    \begin{align*}
+    \Delta_{\lim s} &= \pm \left( 3 + \frac{23.664}{30} + \frac{1 \times 23.664}{4000} \right) \approx \pm 3.8\,\mu\text{m} = \pm 0.0038\text{ mm} \\
+    \Delta_{\lim h} &= \pm \left( 3 + \frac{10}{50} + \frac{1 \times 10}{2500} \right) \approx \pm 3.2\,\mu\text{m} = \pm 0.0032\text{ mm}
+    \end{align*}
+    
+    \item \textbf{间接测量合成随机极限误差}（方差合成公式）：
+    \begin{align*}
+    \Delta_{\lim R} &= \pm \sqrt{ \left(\frac{s}{4h}\right)^2 \Delta_{\lim s}^2 + \left(\frac{s^2}{8h^2} - \frac{1}{2}\right)^2 \Delta_{\lim h}^2 } \\
+    &= \pm \sqrt{ \left(\frac{23.664}{40}\right)^2 \times (0.0038)^2 + \left(\frac{23.664^2}{800} - \frac{1}{2}\right)^2 \times (0.0032)^2 } \approx \pm 0.0023\text{ mm}
+    \end{align*}
+\end{enumerate}
+
+\subsubsection{第四步：测量结果表达与合格性评定}
+\begin{itemize}[leftmargin=1.5em, itemsep=3pt]
+    \item \textbf{最终测量结果表征}：
+    \[ R = (12 + \Delta R) \pm \Delta_{\lim R} = 11.9972 \pm 0.0023\text{ mm} \approx (11.997 \pm 0.002)\text{ mm} \]
+    \item \textbf{精度是否满足要求}：工件设计公差 $T = 0.01\text{ mm}$，拟定测量方法的极限误差 $\Delta_{\lim R} \approx 0.002\text{ mm} = \frac{1}{5}T$，处于 $\frac{1}{3} \sim \frac{1}{10}$ 黄金合理区间，方案精度完全达标。
+    \item \textbf{工件合格性评定}：工件真实尺寸极值落在 $11.995\text{ mm} \sim 11.999\text{ mm}$ 之间，完全处于图纸允许公差 $[11.990, 12.000]\text{ mm}$ 内部，同时亦符合 GB 3177 内缩验收极限要求，故\textbf{判定该工件绝对合格}。
+\end{itemize}
+
+\subsection{课后作业一：长工件水平支承“艾利点”位置的力学严密积分推导}
+\noindent\textbf{作业题目} \hfill\textsf{[课件 P55 作业一, 课本 P10]}：\\
+\emph{试求长为 $L$ 的均质长形工件在自重均布载荷作用下，使工件两端面平行度变化最小（即两端截面切线保持水平、偏转角为零）的最佳对称支承点（艾利点）位置。}
+
+\vspace{6pt}
+\noindent\textbf{材料力学严密推导过程}：
+\begin{enumerate}[leftmargin=1.5em, itemsep=4pt]
+    \item \textbf{力学模型与载荷分布}：
+    设长工件为等截面均质梁，总长为 $L$，单位长度自重为 $q$，两支承点对称分布，距端部距离均为 $a$，跨距为 $b = L - 2a$。\\
+    由整体静力平衡，单个支点的支反力为：
+    \begin{equation}
+    F_R = \frac{q L}{2}
+    \end{equation}
+    
+    \item \textbf{弯矩方程列式}：
+    取工件左端截面为坐标原点 $x = 0$。根据截面法，沿梁轴线的弯矩方程 $M(x)$ 为：
+    \begin{equation}
+    M(x) = 
+    \begin{cases}
+    -\dfrac{1}{2} q x^2, & 0 \le x \le a \\
+    -\dfrac{1}{2} q x^2 + F_R (x - a) = -\dfrac{1}{2} q x^2 + \dfrac{q L}{2}(x - a), & a < x \le \dfrac{L}{2}
+    \end{cases}
+    \end{equation}
+    
+    \item \textbf{端面平行度与转角条件}：
+    艾利点的力学目标是使工件两端截面在变形后仍然相互平行，即端部法线不发生角度偏转。由结构对称性知，梁中央截面 $x = \frac{L}{2}$ 处的转角必为零，即 $\theta\left(\frac{L}{2}\right) = 0$。\\
+    若要使端部 $x = 0$ 处的转角同样为零，即 $\theta(0) = 0$，根据梁的弯曲微积分方程 $\frac{\mathrm{d}\theta}{\mathrm{d}x} = \frac{M(x)}{EI}$，两截面转角差满足：
+    \begin{equation}
+    \theta\left(\frac{L}{2}\right) - \theta(0) = \frac{1}{EI} \int_{0}^{L/2} M(x) \,\mathrm{d}x = 0
+    \end{equation}
+    因此，使端面平行度变化最小的充分必要条件为：\textbf{半跨内的总弯矩积分为零}！
+    \begin{equation}
+    \int_{0}^{L/2} M(x) \,\mathrm{d}x = 0
+    \end{equation}
+
+    \item \textbf{积分求解}：
+    将各分段弯矩代入全段积分：
+    \begin{align*}
+    \int_{0}^{L/2} M(x) \,\mathrm{d}x &= \int_{0}^{L/2} \left(-\frac{1}{2} q x^2\right) \mathrm{d}x + \int_{a}^{L/2} \frac{q L}{2}(x - a) \,\mathrm{d}x = 0 \\
+    &= \left[ -\frac{1}{6} q x^3 \right]_{0}^{L/2} + \frac{q L}{2} \left[ \frac{(x - a)^2}{2} \right]_{a}^{L/2} = 0 \\
+    &= -\frac{1}{6} q \left(\frac{L}{2}\right)^3 + \frac{q L}{4} \left(\frac{L}{2} - a\right)^2 = 0
+    \end{align*}
+    两边消去常数 $q L$：
+    \begin{align*}
+    -\frac{L^2}{48} + \frac{1}{4} \left(\frac{L}{2} - a\right)^2 &= 0 \\
+    \left(\frac{L}{2} - a\right)^2 &= \frac{L^2}{12} \\
+    \frac{L}{2} - a &= \frac{L}{\sqrt{12}} = \frac{L}{2\sqrt{3}}
+    \end{align*}
+    
+    \item \textbf{得出最终解析常数}：
+    由于支点间跨距 $b = 2\left(\frac{L}{2} - a\right)$，立即可得跨距 $b$ 与悬臂长 $a$ 的严格解析解：
+    \begin{align}
+    b &= \frac{L}{\sqrt{3}} \approx 0.57735\,L \approx 0.577\,L \\
+    a &= \frac{L}{2} - \frac{b}{2} = \frac{1}{2}\left(1 - \frac{1}{\sqrt{3}}\right)L = \frac{\sqrt{3}-1}{2\sqrt{3}}L \approx 0.21132\,L \approx \frac{4}{19}L
+    \end{align}
+    推导完毕。
+\end{enumerate}
+
+\subsection{课后作业二（教材 P21 习题 1.1）：方形角尺自检法计算}
+\noindent\textbf{题目}：用自准直仪以自检法测量方形角尺，读数分别为：$e_1 = +1.1''$，$e_2 = -2.6''$，$e_3 = +2.3''$，$e_4 = -2.8''$。求各直角的误差 $\Delta\varphi_i$。
+
+\vspace{4pt}
+\noindent\textbf{解析与解题步骤}：
+\begin{enumerate}[leftmargin=1.5em, itemsep=3pt]
+    \item \textbf{求自准直仪定角偏差 $\Delta\alpha$}：
+    根据闭合约束 $\sum_{i=1}^4 \Delta\varphi_i = 0$，定角偏差为：
+    \[ \Delta\alpha = -\frac{1}{4}\sum_{i=1}^4 e_i = -\frac{1}{4} \left( 1.1 - 2.6 + 2.3 - 2.8 \right)'' = -\frac{1}{4} (-2.0'') = +0.5'' \]
+    
+    \item \textbf{计算各个直角偏差 $\Delta\varphi_i = \Delta\alpha + e_i$}：
+    \begin{align*}
+    \Delta\varphi_1 &= +0.5'' + 1.1'' = \mathbf{+1.6''} \\
+    \Delta\varphi_2 &= +0.5'' - 2.6'' = \mathbf{-2.1''} \\
+    \Delta\varphi_3 &= +0.5'' + 2.3'' = \mathbf{+2.8''} \\
+    \Delta\varphi_4 &= +0.5'' - 2.8'' = \mathbf{-2.3''}
+    \end{align*}
+    
+    \item \textbf{自检闭合验算}：
+    \[ \sum_{i=1}^4 \Delta\varphi_i = 1.6'' - 2.1'' + 2.8'' - 2.3'' = 0'' \]
+    计算结果完全符合封闭原则。
+\end{enumerate}
+
+\subsection{课后作业三（教材 P21 习题 1.3）：测长机温度变化误差计算}
+\noindent\textbf{题目}：在测长机上用绝对法测量尺寸为 $L = 800 \pm 0.02\text{ mm}$ 的工件。测长机机身材料为铸铁（$a_1 = 10.4 \times 10^{-6}/^\circ\mathrm{C}$），工件材料为钢（$a_2 = 11.5 \times 10^{-6}/^\circ\mathrm{C}$）。上午测量温度：工件 $t_{1\text{上}} = 21^\circ\mathrm{C}$，测长机 $t_{2\text{上}} = 20^\circ\mathrm{C}$；下午测量温度：工件 $t_{1\text{下}} = 24^\circ\mathrm{C}$，测长机 $t_{2\text{下}} = 21^\circ\mathrm{C}$。求上、下午两次测量示值的差别。
+
+\vspace{4pt}
+\noindent\textbf{解析与解题步骤}：
+\begin{enumerate}[leftmargin=1.5em, itemsep=3pt]
+    \item \textbf{温度测量误差通用模型}：
+    仪器的读数误差为 $\Delta L = L [a_2(t_1 - 20) - a_1(t_2 - 20)]$（工件膨胀使示值偏大，标尺膨胀使示值偏小）。
+    
+    \item \textbf{上午测量时的温度误差 $\Delta L_{\text{上}}$}：
+    \begin{align*}
+    \Delta L_{\text{上}} &= 800 \times \left[ 11.5 \times 10^{-6} \times (21 - 20) - 10.4 \times 10^{-6} \times (20 - 20) \right] \\
+    &= 800 \times [11.5 \times 10^{-6} \times 1] = 9.2 \times 10^{-3}\text{ mm} = \mathbf{+9.2\,\mu\text{m}}
+    \end{align*}
+    
+    \item \textbf{下午测量时的温度误差 $\Delta L_{\text{下}}$}：
+    \begin{align*}
+    \Delta L_{\text{下}} &= 800 \times \left[ 11.5 \times 10^{-6} \times (24 - 20) - 10.4 \times 10^{-6} \times (21 - 20) \right] \\
+    &= 800 \times [11.5 \times 10^{-6} \times 4 - 10.4 \times 10^{-6} \times 1] \\
+    &= 800 \times [46.0 - 10.4] \times 10^{-6} = 800 \times 35.6 \times 10^{-6}\text{ mm} = 28.48 \times 10^{-3}\text{ mm} = \mathbf{+28.48\,\mu\text{m}}
+    \end{align*}
+    
+    \item \textbf{上、下午测量值的差别 $\delta$}：
+    \[ \delta = \Delta L_{\text{下}} - \Delta L_{\text{上}} = 28.48\,\mu\text{m} - 9.2\,\mu\text{m} = \mathbf{+19.28\,\mu\text{m}} \approx \mathbf{+0.0193\text{ mm}} \]
+    \textbf{结论}：由于温差及材料热膨胀系数不同，下午测得的工件示值将比上午偏大约 $19.3\,\mu\text{m}$，该差别几乎耗尽了工件全部的公差带（$\pm 0.02\text{ mm}$），生动说明了精密测量中严格控制温度的极端重要性。
+\end{enumerate}
+
+\newpage
+\section{附录：第二章考前 5 分钟背诵核心速查表}
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{第二章测量的基本概念核心知识点极简速查表}
+\label{tab:quick_review}
+\begin{tabularx}{\textwidth}{p{2.8cm} p{4.2cm} X}
+\toprule
+\textbf{模块} & \textbf{核心概念 / 公式} & \textbf{期末高频采分要点 / 易错点} \\
+\midrule
+\textbf{名词辨析} & 测量、测试、检验、检定、比对 & 检验针对\textbf{工件}（定性合格）；检定针对\textbf{仪器}（具有法定强制性，发证书）。 \\
+\midrule
+\textbf{指标优先级} & 精度（精密度） vs 准确度 & \textbf{精密度优先}。系统误差可校准补偿消除，随机离散性无法单次修正。 \\
+\midrule
+\textbf{阿贝原则} & 并联：$\Delta \approx s\varphi$（一次大误差）\newline 串联：$\Delta \approx \frac{1}{2}l\varphi^2$（二次小误差） & 被测线与标准线必须共线串联。卡尺违背（并联），千分尺符合（串联）。 \\
+\midrule
+\textbf{封闭原则} & $\sum_{i=1}^n \Delta\varphi_i = 0$ & \textbf{自检法}。无需更高精度标准器即可测出自身分度误差。 \\
+\midrule
+\textbf{支承点参数} & 白塞尔点：$a \approx 0.2232L \approx \frac{2}{9}L$ \newline 艾利点：$a \approx 0.2113L \approx \frac{4}{19}L$ & 白塞尔点使\textbf{杆长变化最小}；艾利点使\textbf{端面平行度变化最小}（$\int M = 0$）。 \\
+\midrule
+\textbf{赫兹接触变形} & 球对平面：$f = K_1 \sqrt[3]{\frac{p^2}{d}}$ & 减小措施：\textbf{相对测量法}（两点压陷抵消）、增大测头曲率、控制测力。 \\
+\midrule
+\textbf{验收极限} & 上限 = 最大实体尺寸 $- A$ \newline 下限 = 最小实体尺寸 $+ A$ & 安全裕度 $A$ \textbf{向工件公差带内缩}，旨在绝对防止误收废品。 \\
+\midrule
+\textbf{温度误差} & $\Delta L = L [a_1(t_1-20) - a_2(t_2-20)]$ & $a_1=a_2$ 且 $t_1=t_2$ 时误差为0。工件与仪器温差是最大误差源。 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\end{document}
